@@ -10,8 +10,8 @@ class EventController extends Controller
     public function createEvent (Request $request) {
         $request->validate([
             'title'=> 'required',
-            'start'=> 'required',
-            'end'=> 'required'
+            'start'=> 'required|date',
+            'end'=> 'required|date|after:start'
         ]);
 
         $event = Event::create($request->all());
@@ -48,6 +48,11 @@ class EventController extends Controller
     public function updateEvent (Request $request, $eventId) {
 
         $event = Event::where("id", $eventId)->first();
+
+        $request->validate([
+            'start'=> 'date',
+            'end'=> 'date|after:start'
+        ]);
 
         $event->update($request->all());
 
