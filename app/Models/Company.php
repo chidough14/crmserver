@@ -15,7 +15,7 @@ class Company extends Model
 
     public function lists()
     {
-        return $this->belongsToMany(CompanyList::class, 'company_list_company');
+        return $this->belongsToMany(CompanyList::class, 'company_list_companies', 'company_id', 'list_id');
     }
 
     public function activities()

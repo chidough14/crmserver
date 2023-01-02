@@ -18,7 +18,7 @@ class CompanyList extends Model
      */
     public function companies()
     {
-        return $this->belongsToMany(Company::class, 'company_list_company');
+        return $this->belongsToMany(Company::class, 'company_list_companies', 'list_id', 'company_id');
     }
 
     public function user()

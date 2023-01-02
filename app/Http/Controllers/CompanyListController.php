@@ -73,4 +73,15 @@ class CompanyListController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function getUserListsAndCompanies () {
+
+        $lists = CompanyList::where('user_id', auth()->user()->id)->with('companies')->get();
+
+        return response([
+            'lists'=> $lists,
+            'message' => 'Lists with companies',
+            'status' => 'success'
+        ], 201);
+    }
 }

@@ -44,6 +44,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/companies/{companyId}',  [CompanyController::class, 'getSingleCompany']);
     Route::patch('/companies/{companyId}',  [CompanyController::class, 'updateCompany']);
     Route::delete('/companies/{companyId}',  [CompanyController::class, 'deleteCompany']);
+    Route::post('/companies/{companyId}/lists',  [CompanyController::class, 'addCompanyToList']);
 
     // Lists
 
@@ -52,6 +53,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/mylists/{listId}', [CompanyListController::class, 'getSingleList']);
     Route::patch('/mylists/{listId}', [CompanyListController::class, 'updateList']);
     Route::delete('/mylists/{listId}', [CompanyListController::class, 'deleteList']);
+    Route::get('/userListsAndCompanies', [CompanyListController::class, 'getUserListsAndCompanies']);
 
     //Activities
 

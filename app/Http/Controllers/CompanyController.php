@@ -53,7 +53,11 @@ class CompanyController extends Controller
     }
 
     public function getSingleCompany ($companyId){
-        $company = Company::where('id', $companyId)->first();
+        $company = Company::where('id', $companyId)->with('activities')->first();
+        //$company = Company::where('id', $companyId)->first();
+
+        //$activities = $company->activities;
+        
 
         return response([
             'company'=> $company,
@@ -81,6 +85,18 @@ class CompanyController extends Controller
 
         return response([
             'message' => 'Company deleted',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function addCompanyToList (Request $request, $companyId){
+        $company = Company::where('id', $companyId)->first();
+        $listId = $request->listId;
+        
+        $company->lists()->syncWithoutDetaching($listId);
+
+        return response([
+            'message' => 'Company Added',
             'status' => 'success'
         ], 201);
     }
