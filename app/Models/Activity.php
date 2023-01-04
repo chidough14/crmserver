@@ -22,4 +22,9 @@ class Activity extends Model
     {
         return $this->hasMany(Event::class);
     }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'activity_products', 'activity_id', 'product_id')->withPivot('quantity');
+    }
 }

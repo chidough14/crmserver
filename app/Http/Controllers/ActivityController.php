@@ -51,6 +51,9 @@ class ActivityController extends Controller
 
         $activity = Activity::where("id", $activityId)->first();
 
+        $activity->products;
+        $activity->events;
+
         return response([
             'activity'=> $activity,
             'message' => 'Activity',
@@ -80,6 +83,32 @@ class ActivityController extends Controller
 
         return response([
             'message' => 'Activity deleted',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function addUpdateProduct (Request $request, $activityId) {
+
+        $activity = Activity::where("id", $activityId)->first();
+        $productId = $request->productId;
+        $quantity = $request->quantity;
+
+        $activity->products()->sync([$productId => [ 'quantity' => $quantity] ], false);
+
+        return response([
+            'product'=> $activity->products()->where('product_id', $productId)->first(),
+            'message' => 'Product added',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function deleteProduct (Request $request, $activityId) {
+
+        $activity = Activity::where("id", $activityId)->first();
+        $activity->products()->detach($request->productId);
+      
+        return response([
+            'message' => 'Product deleted',
             'status' => 'success'
         ], 201);
     }

@@ -5,6 +5,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyListController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Models\CompanyList;
 use Illuminate\Http\Request;
@@ -63,6 +64,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::patch('/activities/{activityId}', [ActivityController::class, 'updateActivity']);
     Route::delete('/activities/{activityId}', [ActivityController::class, 'deleteActivity']);
 
+    Route::post('/activities/{activityId}/addUpdateProduct', [ActivityController::class, 'addUpdateProduct']);
+    Route::delete('/activities/{activityId}/deleteProduct', [ActivityController::class, 'deleteProduct']);
+
     //Events
 
     Route::post('/events', [EventController::class, 'createEvent']);
@@ -70,4 +74,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/events/{eventId}', [EventController::class, 'getSingleEvent']);
     Route::patch('/events/{eventId}', [EventController::class, 'updateEvent']);
     Route::delete('/events/{eventId}', [EventController::class, 'deleteEvent']);
+
+     //Products
+
+     Route::post('/products', [ProductController::class, 'createProduct']);
+     Route::get('/products', [ProductController::class, 'getProducts']);
+     Route::get('/products/{productId}', [ProductController::class, 'getSingleProduct']);
+     Route::patch('/products/{productId}', [ProductController::class, 'updateProduct']);
+     Route::delete('/products/{productId}', [ProductController::class, 'deleteProduct']);
 });
