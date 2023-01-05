@@ -92,4 +92,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/invoices/{invoiceId}', [InvoiceController::class, 'getSingleInvoice']);
     Route::patch('/invoices/{invoiceId}', [InvoiceController::class, 'updateInvoice']);
     Route::delete('/invoices/{invoiceId}', [InvoiceController::class, 'deleteInvoice']);
+
+    Route::post('/invoices/{invoiceId}/addUpdateProduct', [InvoiceController::class, 'addUpdateProduct']);
+    Route::delete('/invoices/{invoiceId}/deleteProduct', [InvoiceController::class, 'deleteProduct']);
 });

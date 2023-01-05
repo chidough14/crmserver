@@ -55,6 +55,7 @@ class ActivityController extends Controller
         $activity->products;
         $activity->events;
         $activity->company;
+        $activity->invoices;
 
         return response([
             'activity'=> $activity,

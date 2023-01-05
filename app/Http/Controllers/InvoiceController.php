@@ -32,7 +32,7 @@ class InvoiceController extends Controller
             $sync_data[$arrIds[$i]] = ['quantity' => $arrQuantity[$i]];
 
         $invoice->products()->attach($sync_data);
-        $invoice->products;
+        //$invoice->products;
 
         return response([
             'invoice'=> $invoice,
@@ -86,6 +86,32 @@ class InvoiceController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function addUpdateProduct (Request $request, $invoiceId) {
+
+        $invoice = Invoice::where("id", $invoiceId)->first();
+        $productId = $request->productId;
+        $quantity = $request->quantity;
+
+        $invoice->products()->sync([$productId => [ 'quantity' => $quantity] ], false);
+
+        return response([
+            'product'=> $invoice->products()->where('product_id', $productId)->first(),
+            'message' => 'Product added',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function deleteProduct (Request $request, $invoiceId) {
+
+        $invoice = Invoice::where("id", $invoiceId)->first();
+        $invoice->products()->detach($request->productId);
+      
+        return response([
+            'message' => 'Product deleted',
+            'status' => 'success'
+        ], 201);
+    }
 }
 
 
@@ -97,3 +123,5 @@ class InvoiceController extends Controller
 //     "user_id": 2,
 //      "activity_id": 16
 // }
+// paymentTerm
+// total, email
