@@ -4,6 +4,7 @@ use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyListController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
@@ -82,4 +83,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
      Route::get('/products/{productId}', [ProductController::class, 'getSingleProduct']);
      Route::patch('/products/{productId}', [ProductController::class, 'updateProduct']);
      Route::delete('/products/{productId}', [ProductController::class, 'deleteProduct']);
+
+
+    //Invoices
+
+    Route::post('/invoices', [InvoiceController::class, 'createInvoice']);
+    Route::get('/invoices', [InvoiceController::class, 'getInvoices']);
+    Route::get('/invoices/{invoiceId}', [InvoiceController::class, 'getSingleInvoice']);
+    Route::patch('/invoices/{invoiceId}', [InvoiceController::class, 'updateInvoice']);
+    Route::delete('/invoices/{invoiceId}', [InvoiceController::class, 'deleteInvoice']);
 });

@@ -20,7 +20,7 @@ class ActivityController extends Controller
 
         $activity = Activity::create($request->all());
 
-        Event::create([
+        $event = Event::create([
             "title" => "{$request->type} with {$request->label}",
             "description" => "Auto generated",
             "user_id" => auth()->user()->id,
@@ -31,6 +31,7 @@ class ActivityController extends Controller
 
         return response([
             'activity'=> $activity,
+            'event'=> $event,
             'message' => 'Activity created successfully',
             'status' => 'success'
         ], 201);
@@ -53,6 +54,7 @@ class ActivityController extends Controller
 
         $activity->products;
         $activity->events;
+        $activity->company;
 
         return response([
             'activity'=> $activity,

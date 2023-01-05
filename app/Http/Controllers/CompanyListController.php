@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CompanyList;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CompanyListController extends Controller
 {
@@ -41,6 +42,8 @@ class CompanyListController extends Controller
     public function getSingleList ($listId) {
 
         $list = CompanyList::where('id', $listId)->first();
+
+        $list->companies;
 
         return response([
             'list'=> $list,

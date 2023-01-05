@@ -27,4 +27,14 @@ class Activity extends Model
     {
         return $this->belongsToMany(Product::class, 'activity_products', 'activity_id', 'product_id')->withPivot('quantity');
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
 }
