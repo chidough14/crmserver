@@ -87,4 +87,63 @@ class CompanyListController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    function createClone ($list, $ownList) {
+        $list->companies;
+
+        $arr = array();
+
+        for ($i=0; $i < count($list->companies); $i++) {
+          $arr[] = $list->companies[$i]->id;
+        }
+
+        $clonedList = $list;
+        unset($clonedList->id);
+
+        $newList = new CompanyList();
+        $newList->name = $clonedList->name."_Copy"; 
+        $newList->description = $clonedList->description;
+        $newList->type = $clonedList->type; 
+        $newList->user_id = ($ownList === true) ? $clonedList->user_id : auth()->user()->id;  
+        $newList->save();
+
+        $newList->companies()->attach($arr);
+
+        return $newList;
+    }
+
+
+    public function cloneList ($listId) {
+        
+        $list = CompanyList::where("id", $listId)->first();
+
+        if ($list->user_id === auth()->user()->id) {
+            $ownList = true;
+            $res = $this->createClone($list, $ownList);
+
+            return response([
+                'clonedList'=> $res,
+                'message' => 'List',
+                'status' => 'success'
+            ], 201);
+        } else {
+            if ($list->type === "private") {
+
+                return response([
+                    'message' => 'Not allowed',
+                    'status' => 'success'
+                ], 201);
+
+            } else {
+                $ownList = false;
+                $response = $this->createClone($list, $ownList);
+
+                return response([
+                    'clonedList'=> $response,
+                    'message' => 'List',
+                    'status' => 'success'
+                ], 201);
+            }
+        }
+    }
 }
