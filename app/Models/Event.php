@@ -22,4 +22,9 @@ class Event extends Model
     {
         return $this->belongsTo(Activity::class);
     }
+
+    public function meeting()
+    {
+        return $this->hasOne(Meeting::class);
+    }
 }

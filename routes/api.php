@@ -5,10 +5,11 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyListController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\MeetingController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
-use App\Models\CompanyList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [UserController::class, 'logout']);
     Route::get('/loggeduser', [UserController::class, 'loggedUser']);
     Route::post('/changepassword', [UserController::class, 'changePassword']);
+
+    Route::get('/users', [UserController::class, 'getAllUsers']);
 
     //Company
     Route::post('/companies', [CompanyController::class, 'createCompany']);
@@ -97,4 +100,20 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/invoices/{invoiceId}/addUpdateProduct', [InvoiceController::class, 'addUpdateProduct']);
     Route::delete('/invoices/{invoiceId}/deleteProduct', [InvoiceController::class, 'deleteProduct']);
+
+    // Meetings
+    Route::post('/meetings', [MeetingController::class, 'createMeeting']);
+    Route::get('/meetings', [MeetingController::class, 'getMeetings']);
+    Route::patch('/meetings/{meetingId}', [MeetingController::class, 'updateMeeting']);
+    Route::delete('/meetings/{meetingId}', [MeetingController::class, 'deleteMeeting']);
+    Route::get('/meeting/join/{meetingId}', [MeetingController::class, 'getMeetingDetails']);
+
+    //Messages
+
+    Route::post('/messages', [MessageController::class, 'createMessage']);
+    Route::get('/messages', [MessageController::class, 'getMessages']);
+    Route::get('/messages/{messageId}', [MessageController::class, 'getSingleMessage']);
+    Route::patch('/messages/{messageId}', [MessageController::class, 'updateMessage']);
+    Route::delete('/messages/{messageId}', [MessageController::class, 'deleteMessage']);
+    Route::patch('/messages/{messageId}/read', [MessageController::class, 'readMessage']);
 });
