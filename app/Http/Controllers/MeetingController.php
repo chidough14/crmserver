@@ -74,4 +74,15 @@ class MeetingController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function deleteMeeting ($meetingId) {
+        $meeting = Meeting::where("id", $meetingId)->first();
+
+        $meeting->delete();
+
+        return response([
+            'message' => 'Meeting deleted',
+            'status' => 'success'
+        ], 201);
+    }
 }

@@ -25,7 +25,9 @@ class EventController extends Controller
 
     public function getEvents () {
 
-        $events = Event::all();
+        $events = Event::with('meeting')->get();
+
+        
 
         return response([
             'events'=> $events,

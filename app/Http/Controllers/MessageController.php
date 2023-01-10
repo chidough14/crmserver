@@ -3,23 +3,68 @@
 namespace App\Http\Controllers;
 
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Mail\Message as MailMessage;
+use Illuminate\Support\Str; 
 
 class MessageController extends Controller
 {
     public function createMessage (Request $request) {
-        $request->validate([
-            'subject'=> 'required',
-            'message'=> 'required'
-        ]);
+        if (is_array($request->receiver_id)) {
+            $messageArray = array();
+            for ($i=0; $i < count($request->receiver_id); $i++) {
+              $res = new Message();
+              $res->subject = $request->subject;
+              $res->message = $request->message;
+              $res->sender_id = $request->sender_id;
+              $res->receiver_id = $request->receiver_id[$i];
 
-        $message = Message::create($request->all());
+              $res->save();
 
-        return response([
-            'createdMessage'=> $message,
-            'message' => 'Message created successfully',
-            'status' => 'success'
-        ], 201);
+              array_push($messageArray, $res);
+
+              $user = User::where("id", $request->receiver_id[$i])->first();
+              $email = $user->email;
+
+              Mail::send('message', ['id'=> $res->id], function (MailMessage $message) use ($email) {
+                    $message->subject('New Message');
+                    $message->to($email);
+                });
+            }
+
+            return response([
+                'createdMessages'=> $messageArray,
+                'message' => 'Messages created successfully',
+                'status' => 'success'
+            ], 201);
+
+        } else {
+            $request->validate([
+                'subject'=> 'required',
+                'message'=> 'required'
+            ]);
+
+            $resp = Message::create($request->all());
+
+            $user = User::where("id", $request->receiver_id)->first();
+            $email = $user->email;
+
+
+
+            // Sending email 
+            Mail::send('message', ['id'=> $resp->id], function (MailMessage $message) use ($email) {
+                $message->subject('New Message');
+                $message->to($email);
+            });
+
+            return response([
+                'createdMessage'=> $resp,
+                'message' => 'Message created successfully',
+                'status' => 'success'
+            ], 201);
+        }
     }
 
     public function getMessages () {
