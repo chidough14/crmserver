@@ -9,6 +9,7 @@ use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -116,4 +117,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::patch('/messages/{messageId}', [MessageController::class, 'updateMessage']);
     Route::delete('/messages/{messageId}', [MessageController::class, 'deleteMessage']);
     Route::patch('/messages/{messageId}/read', [MessageController::class, 'readMessage']);
+
+    Route::patch('/settings', [SettingsController::class, 'updateSetting']);
+    //Route::get('/messages', [MessageController::class, 'getMessages']);
 });
