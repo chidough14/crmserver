@@ -74,6 +74,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/activities/{activityId}/deleteProduct', [ActivityController::class, 'deleteProduct']);
     Route::get('/activities/{activityId}/clone', [ActivityController::class, 'cloneActivity']);
 
+    Route::post('/activities/{activityId}/transfer', [ActivityController::class, 'transferActivity']);
+
     //Events
 
     Route::post('/events', [EventController::class, 'createEvent']);

@@ -25,12 +25,26 @@ class EventController extends Controller
 
     public function getEvents () {
 
-        $events = Event::with('meeting')->get();
+        $events = Event::with('meeting')->where("user_id", auth()->user()->id)->get()->toArray();
+
+        $otherUsersEvents = Event::with('meeting')->where("user_id", "!=",auth()->user()->id)->get();
+
+        $arr = array();
+        for ($i=0; $i < count($otherUsersEvents); $i++) {
+            if($otherUsersEvents[$i]->meeting) {
+                if (in_array(auth()->user()->email, $otherUsersEvents[$i]->meeting->invitedUsers)) {
+                    array_push($arr, $otherUsersEvents[$i]);
+                }
+            }
+           
+        }
+
+        $response = array_merge($events, $arr);
 
         
 
         return response([
-            'events'=> $events,
+            'events'=> $response,
             'message' => 'All events',
             'status' => 'success'
         ], 201);
