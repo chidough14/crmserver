@@ -30,7 +30,7 @@ class CompanyListController extends Controller
 
     public function getAllLists () {
 
-        $lists = CompanyList::all();
+        $lists = CompanyList::where("user_id", auth()->user()->id)->get();
 
         return response([
             'lists'=> $lists,

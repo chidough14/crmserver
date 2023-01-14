@@ -100,4 +100,16 @@ class CompanyController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function deleteCompanyFromList (Request $request, $companyId){
+        $company = Company::where('id', $companyId)->first();
+        $listId = $request->listId;
+        
+        $company->lists()->detach($listId);
+
+        return response([
+            'message' => 'Company deleted',
+            'status' => 'success'
+        ], 201);
+    }
 }
