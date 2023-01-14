@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\Event;
 use App\Models\Invoice;
+use App\Models\Message;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -40,7 +42,7 @@ class ActivityController extends Controller
 
     public function getActivities () {
 
-        $activities = Activity::all();
+        $activities = Activity::where("user_id", auth()->user()->id)->get();
 
         return response([
             'activities'=> $activities,
@@ -117,7 +119,7 @@ class ActivityController extends Controller
         ], 201);
     }
 
-    function createClone ($activity, $ownActivity) {
+    function createClone ($activity, $ownActivity, $transfer) {
         $activity->products;
 
         $arr = array();
@@ -143,10 +145,15 @@ class ActivityController extends Controller
         unset($clonedActivity->id);
 
         $newActivity = new Activity();
+        if ($transfer) {
+            $newActivity->user_id = $transfer->id; 
+        } else {
+            $newActivity->user_id = ($ownActivity === true) ? $clonedActivity->user_id : auth()->user()->id; 
+        }
         $newActivity->label = $clonedActivity->label."_Copy"; 
         $newActivity->description = $clonedActivity->description;
         $newActivity->type = $clonedActivity->type; 
-        $newActivity->user_id = ($ownActivity === true) ? $clonedActivity->user_id : auth()->user()->id; 
+        // $newActivity->user_id = ($ownActivity === true) ? $clonedActivity->user_id : auth()->user()->id; 
         $newActivity->assignedTo = $clonedActivity->assignedTo; 
         $newActivity->probability = $clonedActivity->probability; 
         $newActivity->earningEstimate = $clonedActivity->earningEstimate; 
@@ -175,10 +182,15 @@ class ActivityController extends Controller
             unset($clonedInv->id);
 
             $newInv = new   Invoice();
+            if ($transfer) {
+                $newInv->user_id = $transfer->id; 
+            } else {
+                $newInv->user_id = ($ownActivity === true) ? $clonedInv->user_id : auth()->user()->id; 
+            }
             $newInv->invoice_no = $clonedInv->invoice_no; 
             $newInv->payment_method = $clonedInv->payment_method;
             $newInv->billing_address = $clonedInv->billing_address; 
-            $newInv->user_id = ($ownActivity === true) ? $clonedInv->user_id : auth()->user()->id; 
+            //$newInv->user_id = ($ownActivity === true) ? $clonedInv->user_id : auth()->user()->id; 
             $newInv->reference = $clonedInv->reference; 
             $newInv->type = $clonedInv->type; 
             $newInv->activity_id = $newActivity->id;
@@ -201,7 +213,8 @@ class ActivityController extends Controller
 
         if ($activity->user_id === auth()->user()->id) {
             $ownActivity = true;
-            $res = $this->createClone($activity, $ownActivity);
+            $transfer = false;
+            $res = $this->createClone($activity, $ownActivity, $transfer);
 
             return response([
                 'clonedActivity'=> $res,
@@ -218,7 +231,8 @@ class ActivityController extends Controller
 
             } else {
                 $ownActivity = false;
-                $response = $this->createClone($activity, $ownActivity);
+                $transfer = false;
+                $response = $this->createClone($activity, $ownActivity, $transfer);
 
                 return response([
                     'clonedActivity'=> $response,
@@ -227,5 +241,27 @@ class ActivityController extends Controller
                 ], 201);
             }
         }
+    }
+
+    public function transferActivity (Request $request, $activityId) {
+        $activity = Activity::where("id", $activityId)->first();
+
+        $newOwner = User::where("email", $request->email)->first();
+
+        $ownActivity = true;
+
+        $transferedActivity = $this->createClone($activity, $ownActivity, $newOwner );
+
+        $res = new Message();
+        $res->subject = "Activity Tranfer";
+        $res->message = "An activity $transferedActivity->label ($transferedActivity->id) has been transfered to you";
+        $res->receiver_id =  $newOwner->id;
+
+        $res->save();
+
+        return response([
+            'message' => 'Activity Transfered',
+            'status' => 'success'
+        ], 201);
     }
 }

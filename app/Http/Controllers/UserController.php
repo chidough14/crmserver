@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Settings;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -31,6 +32,12 @@ class UserController extends Controller
         ]);
 
         $token = $user->createToken($request->email)->plainTextToken;
+
+        Settings::create([
+            'user_id'=> $user->id,
+            'calendar_mode'=> "week",
+            'dashboard_mode'=> "show_graphs"
+        ]);
 
         return response([
             'token' => $token,
@@ -75,6 +82,7 @@ class UserController extends Controller
 
     public function loggedUser () {
         $loggerdUser = auth()->user();
+        $loggerdUser->setting;
 
         return response([
             'user' => $loggerdUser,

@@ -63,6 +63,11 @@ class User extends Authenticatable
         return $this->hasMany(Meeting::class);
     }
 
+    public function setting()
+    {
+        return $this->hasOne(Settings::class);
+    }
+
     // public function messages()
     // {
     //     return $this->hasMany(Message::class);
