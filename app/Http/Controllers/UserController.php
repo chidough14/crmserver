@@ -41,6 +41,7 @@ class UserController extends Controller
 
         return response([
             'token' => $token,
+            'user' => $user,
             'message' => 'Registration Success',
             'status' => 'success'
         ], 201);
