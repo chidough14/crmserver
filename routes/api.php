@@ -51,6 +51,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::patch('/companies/{companyId}',  [CompanyController::class, 'updateCompany']);
     Route::delete('/companies/{companyId}',  [CompanyController::class, 'deleteCompany']);
     Route::post('/companies/{companyId}/lists',  [CompanyController::class, 'addCompanyToList']);
+    Route::delete('/companies/{companyId}/lists',  [CompanyController::class, 'deleteCompanyFromList']);
 
     // Lists
 
@@ -61,6 +62,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/mylists/{listId}', [CompanyListController::class, 'deleteList']);
     Route::get('/userListsAndCompanies', [CompanyListController::class, 'getUserListsAndCompanies']);
     Route::get('/mylists/{listId}/clone', [CompanyListController::class, 'cloneList']);
+    Route::post('/mylists/{listId}/transfer', [CompanyListController::class, 'transferList']);
 
     //Activities
 

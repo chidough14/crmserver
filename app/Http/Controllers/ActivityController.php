@@ -248,6 +248,13 @@ class ActivityController extends Controller
 
         $newOwner = User::where("email", $request->email)->first();
 
+        if ($newOwner === null) {
+            return response([
+                'message' => 'Email does not exit',
+                'status' => 'error'
+            ], 201);
+        }
+
         $ownActivity = true;
 
         $transferedActivity = $this->createClone($activity, $ownActivity, $newOwner );

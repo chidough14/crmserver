@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\CompanyList;
+use App\Models\Message;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -30,7 +32,7 @@ class CompanyListController extends Controller
 
     public function getAllLists () {
 
-        $lists = CompanyList::all();
+        $lists = CompanyList::where("user_id", auth()->user()->id)->get();
 
         return response([
             'lists'=> $lists,
@@ -88,7 +90,7 @@ class CompanyListController extends Controller
         ], 201);
     }
 
-    function createClone ($list, $ownList) {
+    function createClone ($list, $ownList, $transfer) {
         $list->companies;
 
         $arr = array();
@@ -101,10 +103,15 @@ class CompanyListController extends Controller
         unset($clonedList->id);
 
         $newList = new CompanyList();
+        if ($transfer) {
+            $newList->user_id = $transfer->id;
+        } else {
+            $newList->user_id = ($ownList === true) ? $clonedList->user_id : auth()->user()->id;  
+        }
         $newList->name = $clonedList->name."_Copy"; 
         $newList->description = $clonedList->description;
         $newList->type = $clonedList->type; 
-        $newList->user_id = ($ownList === true) ? $clonedList->user_id : auth()->user()->id;  
+        //$newList->user_id = ($ownList === true) ? $clonedList->user_id : auth()->user()->id;  
         $newList->save();
 
         $newList->companies()->attach($arr);
@@ -119,7 +126,8 @@ class CompanyListController extends Controller
 
         if ($list->user_id === auth()->user()->id) {
             $ownList = true;
-            $res = $this->createClone($list, $ownList);
+            $transfer = false;
+            $res = $this->createClone($list, $ownList, $transfer);
 
             return response([
                 'clonedList'=> $res,
@@ -136,7 +144,8 @@ class CompanyListController extends Controller
 
             } else {
                 $ownList = false;
-                $response = $this->createClone($list, $ownList);
+                $transfer = false;
+                $response = $this->createClone($list, $ownList, $transfer);
 
                 return response([
                     'clonedList'=> $response,
@@ -145,5 +154,34 @@ class CompanyListController extends Controller
                 ], 201);
             }
         }
+    }
+
+    public function transferList (Request $request, $listId) {
+        $list = CompanyList::where("id", $listId)->first();
+
+        $newOwner = User::where("email", $request->email)->first();
+        
+        if ($newOwner === null) {
+            return response([
+                'message' => 'Email does not exit',
+                'status' => 'error'
+            ], 201);
+        }
+
+        $ownList = true;
+
+        $transferedList = $this->createClone($list, $ownList, $newOwner );
+
+        $res = new Message();
+        $res->subject = "List Tranfer";
+        $res->message = "A list $transferedList->name ($transferedList->id) has been transfered to you";
+        $res->receiver_id =  $newOwner->id;
+
+        $res->save();
+
+        return response([
+            'message' => 'List Transfered',
+            'status' => 'success'
+        ], 201);
     }
 }
