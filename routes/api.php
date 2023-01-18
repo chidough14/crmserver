@@ -63,6 +63,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/userListsAndCompanies', [CompanyListController::class, 'getUserListsAndCompanies']);
     Route::get('/mylists/{listId}/clone', [CompanyListController::class, 'cloneList']);
     Route::post('/mylists/{listId}/transfer', [CompanyListController::class, 'transferList']);
+    Route::get('/mylists-dashboard', [CompanyListController::class, 'getDashboardLists']);
 
     //Activities
 
@@ -77,6 +78,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/activities/{activityId}/clone', [ActivityController::class, 'cloneActivity']);
 
     Route::post('/activities/{activityId}/transfer', [ActivityController::class, 'transferActivity']);
+    Route::get('/activities-summary', [ActivityController::class, 'getActivitiesSummary']);
 
     //Events
 
@@ -85,6 +87,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/events/{eventId}', [EventController::class, 'getSingleEvent']);
     Route::patch('/events/{eventId}', [EventController::class, 'updateEvent']);
     Route::delete('/events/{eventId}', [EventController::class, 'deleteEvent']);
+
+    Route::get('/dashboardevents', [EventController::class, 'dashboardEvents']);
 
      //Products
 
@@ -112,11 +116,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::patch('/meetings/{meetingId}', [MeetingController::class, 'updateMeeting']);
     Route::delete('/meetings/{meetingId}', [MeetingController::class, 'deleteMeeting']);
     Route::get('/meeting/join/{meetingId}', [MeetingController::class, 'getMeetingDetails']);
+    Route::get('/notifications', [MeetingController::class, 'getNotifications']);
 
     //Messages
 
     Route::post('/messages', [MessageController::class, 'createMessage']);
-    Route::get('/messages', [MessageController::class, 'getMessages']);
+    Route::get('/inboxmessages', [MessageController::class, 'getInboxMessages']);
+    Route::get('/outboxmessages', [MessageController::class, 'getOutboxMessages']);
     Route::get('/messages/{messageId}', [MessageController::class, 'getSingleMessage']);
     Route::patch('/messages/{messageId}', [MessageController::class, 'updateMessage']);
     Route::delete('/messages/{messageId}', [MessageController::class, 'deleteMessage']);

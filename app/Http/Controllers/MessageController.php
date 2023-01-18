@@ -67,13 +67,22 @@ class MessageController extends Controller
         }
     }
 
-    public function getMessages () {
-        $outBoxMessages = Message::where("sender_id", auth()->user()->id)->get();
+    public function getInboxMessages () {
 
-        $inBoxMessages = Message::where("receiver_id", auth()->user()->id)->get();
+        $inBoxMessages = Message::where("receiver_id", auth()->user()->id)->orderBy('created_at', 'DESC')->paginate(5);
 
         return response([
             'inbox'=> $inBoxMessages,
+            'message' => 'Your messages',
+            'status' => 'success'
+        ], 201);
+
+    }
+
+    public function getOutboxMessages () {
+        $outBoxMessages = Message::where("sender_id", auth()->user()->id)->orderBy('created_at', 'DESC')->paginate(5);
+
+        return response([
             'outbox' => $outBoxMessages,
             'message' => 'Your messages',
             'status' => 'success'

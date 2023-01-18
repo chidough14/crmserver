@@ -32,7 +32,7 @@ class CompanyListController extends Controller
 
     public function getAllLists () {
 
-        $lists = CompanyList::where("user_id", auth()->user()->id)->get();
+        $lists = CompanyList::where("user_id", auth()->user()->id)->paginate(5);
 
         return response([
             'lists'=> $lists,
@@ -40,6 +40,18 @@ class CompanyListController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function getDashboardLists () {
+
+        $lists = CompanyList::where("user_id", auth()->user()->id)->orderBy("created_at", "desc")->get();
+
+        return response([
+            'list'=> $lists[0],
+            'message' => 'Lists',
+            'status' => 'success'
+        ], 201);
+    }
+    
 
     public function getSingleList ($listId) {
 

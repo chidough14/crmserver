@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Meeting;
+use App\Models\Message;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -26,19 +27,46 @@ class MeetingController extends Controller
     }
 
     public function getMeetings () {
-        $meetings = Meeting::with('event')->where("user_id", auth()->user()->id)->get();
+        $meetings = Meeting::with('event')
+        ->where("user_id", auth()->user()->id)
+        ->get()
+        ->filter(function($p){
+            return $p->event->start >= today();
+        })->values();
 
-        $invited = Meeting::with('event')->whereJsonContains('invitedUsers', auth()->user()->email)->get();
+        $invited = Meeting::with('event')
+        ->whereJsonContains('invitedUsers', auth()->user()->email)
+        ->get()
+        ->filter(function($p){
+            return $p->event->start >= today();
+        })->values();
 
         //$meetings->event();
 
         return response([
+            'today'=> today(),
             'meetings'=> $meetings,
             'invitedMeetings'=> $invited,
             'message' => 'Meetings',
             'status' => 'success'
         ], 201);
     }
+
+    public function getNotifications () {
+
+        $invited = Meeting::with('event')->whereJsonContains('invitedUsers', auth()->user()->email)->get();
+        $inBoxMessages = Message::where("receiver_id", auth()->user()->id)->get();
+
+        //$meetings->event();
+
+        return response([
+            'invitedMeetings'=> $invited,
+            'inbox'=> $inBoxMessages,
+            'message' => 'Meetings',
+            'status' => 'success'
+        ], 201);
+    }
+    
 
     public function updateMeeting (Request $request, $meetingId) {
         $meeting = Meeting::where("id", $meetingId)->first();

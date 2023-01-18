@@ -67,6 +67,39 @@ class ActivityController extends Controller
         ], 201);
     }
 
+    public function getActivitiesSummary () {
+
+        $activities = Activity::where("user_id", auth()->user()->id)->get()->toArray();
+
+        $low = array();
+        $medium = array();
+        $high = array();
+        $closed = array();
+        for ($i=0; $i<count($activities); $i++) {
+            if ($activities[$i]['probability'] === "Low") {
+                $low[] = $activities[$i];
+            }
+            if ($activities[$i]['probability'] === "Medium") {
+                $medium[] = $activities[$i];
+            }
+            if ($activities[$i]['probability'] === "High") {
+                $high[] = $activities[$i];
+            }
+            if ($activities[$i]['probability'] === "Closed") {
+                $closed[] = $activities[$i];
+            }
+        }
+
+
+        return response([
+            'low'=> $low,
+            'medium'=> $medium,
+            'high'=> $high,
+            'closed'=> $closed,
+            'status' => 'success'
+        ], 201);
+    }
+
     public function updateActivity (Request $request, $activityId) {
 
         $activity = Activity::where("id", $activityId)->first();

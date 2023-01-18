@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
@@ -19,6 +20,37 @@ class EventController extends Controller
         return response([
             'event'=> $event,
             'message' => 'Event created successfully',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function dashboardEvents () {
+
+        $events = Event::with('meeting')
+        ->where("user_id", auth()->user()->id)
+        ->whereDate('start', Carbon::today())
+        ->get()->toArray();
+
+        $otherUsersEvents = Event::with('meeting')
+        ->where("user_id", "!=",auth()->user()->id)
+        ->whereDate('start', Carbon::today())
+        ->get();
+
+        $arr = array();
+        for ($i=0; $i < count($otherUsersEvents); $i++) {
+            if($otherUsersEvents[$i]->meeting) {
+                if (in_array(auth()->user()->email, $otherUsersEvents[$i]->meeting->invitedUsers)) {
+                    array_push($arr, $otherUsersEvents[$i]);
+                }
+            }
+           
+        }
+
+        $response = array_merge($events, $arr);
+        
+        return response([
+            'events'=> $response,
+            'message' => 'All events',
             'status' => 'success'
         ], 201);
     }

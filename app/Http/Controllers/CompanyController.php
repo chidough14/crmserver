@@ -32,7 +32,7 @@ class CompanyController extends Controller
 
 
     public function getCompanies () {
-        $companies = Company::all();
+        $companies = Company::paginate(5);
 
         return response([
             'companies'=> $companies,
