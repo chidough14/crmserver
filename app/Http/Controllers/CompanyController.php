@@ -32,7 +32,7 @@ class CompanyController extends Controller
 
 
     public function getCompanies () {
-        $companies = Company::all();
+        $companies = Company::paginate(5);
 
         return response([
             'companies'=> $companies,
@@ -54,9 +54,6 @@ class CompanyController extends Controller
 
     public function getSingleCompany ($companyId){
         $company = Company::where('id', $companyId)->with('activities')->first();
-        //$company = Company::where('id', $companyId)->first();
-
-        //$activities = $company->activities;
         
 
         return response([

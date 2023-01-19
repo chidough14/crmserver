@@ -25,7 +25,7 @@ class ProductController extends Controller
 
     public function getProducts () {
 
-        $products = Product::all();
+        $products = Product::paginate(5);
 
         return response([
             'products'=> $products,
