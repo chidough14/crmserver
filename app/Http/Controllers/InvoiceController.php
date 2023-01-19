@@ -42,7 +42,37 @@ class InvoiceController extends Controller
     }
 
     public function getInvoices () {
-        $invoices = Invoice::all();
+        $invoices = Invoice::with("activity")->where("user_id", auth()->user()->id)->paginate(5);
+
+        return response([
+            'invoices'=> $invoices,
+            'message' => 'All invoices',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function filterInvoices ($critera) {
+        if ($critera === "1month") {
+            $invoices = Invoice::with("activity")
+            ->where("user_id", auth()->user()->id)
+            ->where('created_at', '>', now()->subDays(30)->endOfDay())
+            ->paginate(5);
+        } 
+
+        if ($critera === "3months") {
+            $invoices = Invoice::with("activity")
+            ->where("user_id", auth()->user()->id)
+            ->where('created_at', '>', now()->subDays(60)->endOfDay())
+            ->paginate(5);
+        } 
+
+        if ($critera === "12months") {
+            $invoices = Invoice::with("activity")
+            ->where("user_id", auth()->user()->id)
+            ->where('created_at', '>', now()->subDays(365)->endOfDay())
+            ->paginate(5);
+        } 
+       
 
         return response([
             'invoices'=> $invoices,

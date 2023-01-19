@@ -65,6 +65,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/mylists/{listId}/transfer', [CompanyListController::class, 'transferList']);
     Route::get('/mylists-dashboard', [CompanyListController::class, 'getDashboardLists']);
 
+    Route::get('/filter-lists/{critera}', [CompanyListController::class, 'filterLists']);
+    Route::get('/search-lists',  [CompanyListController::class, 'searchLists']);
+
     //Activities
 
     Route::post('/activities', [ActivityController::class, 'createActivity']);
@@ -109,6 +112,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/invoices/{invoiceId}/addUpdateProduct', [InvoiceController::class, 'addUpdateProduct']);
     Route::delete('/invoices/{invoiceId}/deleteProduct', [InvoiceController::class, 'deleteProduct']);
+    Route::get('/filter-invoices/{critera}', [InvoiceController::class, 'filterInvoices']);
 
     // Meetings
     Route::post('/meetings', [MeetingController::class, 'createMeeting']);
