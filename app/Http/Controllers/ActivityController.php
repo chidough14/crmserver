@@ -51,6 +51,46 @@ class ActivityController extends Controller
         ], 201);
     }
 
+    public function filterActivities ($critera) {
+
+        if ($critera === "1month") {
+            $activities = Activity::where("user_id", auth()->user()->id)
+            ->where('created_at', '>', now()->subDays(30)->endOfDay())
+            ->get();
+        } 
+
+        if ($critera === "3months") {
+            $activities = Activity::where("user_id", auth()->user()->id)
+            ->where('created_at', '>', now()->subDays(60)->endOfDay())
+            ->get();
+        } 
+
+        if ($critera === "12months") {
+            $activities = Activity::where("user_id", auth()->user()->id)
+            ->where('created_at', '>', now()->subDays(365)->endOfDay())
+            ->get();
+        } 
+
+        return response([
+            'activities'=> $activities,
+            'message' => 'All activities',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function searchActivities (Request $request) {
+        $text = $request->query('query');
+        $activities = Activity::where("user_id", auth()->user()->id)
+        ->where('label', 'like', '%'.$text.'%')
+        ->get();
+
+        return response([
+            'activities'=> $activities,
+            'message' => 'Activities results',
+            'status' => 'success'
+        ], 201);
+    }
+
     public function getSingleActivity ($activityId) {
 
         $activity = Activity::where("id", $activityId)->first();

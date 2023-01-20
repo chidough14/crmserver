@@ -82,6 +82,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/activities/{activityId}/transfer', [ActivityController::class, 'transferActivity']);
     Route::get('/activities-summary', [ActivityController::class, 'getActivitiesSummary']);
+    Route::get('/filter-activities/{critera}', [ActivityController::class, 'filterActivities']);
+    Route::get('/search-activities',  [ActivityController::class, 'searchActivities']);
 
     //Events
 
