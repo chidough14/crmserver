@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\CompanyList;
 use App\Models\Message;
 use App\Models\User;
@@ -235,5 +236,31 @@ class CompanyListController extends Controller
             'message' => 'List Transfered',
             'status' => 'success'
         ], 201);
+    }
+
+    public function uploadList (Request $request) {
+        $request->validate([
+            'name'=> 'required'
+        ]);
+
+        $list = CompanyList::create([
+            'name'=> $request->name,
+            'description'=> "Uploaded",
+            'type'=> "private",
+            'user_id'=> auth()->user()->id,
+        ]);
+
+        for ($i=0; $i< count($request->companies); $i++) {
+            $company = Company::where("email", $request->companies[$i]['email'])->first();
+            $list->companies()->attach($company->id);
+        }
+
+        return response([
+            'list'=> $list,
+            'message' => 'List created successfully',
+            'status' => 'success'
+        ], 201);
+
+
     }
 }

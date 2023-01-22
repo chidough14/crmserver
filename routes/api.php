@@ -67,6 +67,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/filter-lists/{critera}', [CompanyListController::class, 'filterLists']);
     Route::get('/search-lists',  [CompanyListController::class, 'searchLists']);
+    Route::post('/upload-list', [CompanyListController::class, 'uploadList']);
 
     //Activities
 
