@@ -23,8 +23,18 @@ class ProductController extends Controller
         ], 201);
     }
 
-    public function getProducts () {
 
+    public function getProductsNoPagination () {
+        $products = Product::all();
+
+        return response([
+            'products'=> $products,
+            'message' => 'All Products',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function getProducts () {
         $products = Product::paginate(5);
 
         return response([

@@ -103,6 +103,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
      Route::get('/products/{productId}', [ProductController::class, 'getSingleProduct']);
      Route::patch('/products/{productId}', [ProductController::class, 'updateProduct']);
      Route::delete('/products/{productId}', [ProductController::class, 'deleteProduct']);
+     Route::get('/products-all', [ProductController::class, 'getProductsNoPagination']);
 
 
     //Invoices
@@ -135,6 +136,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/messages/{messageId}', [MessageController::class, 'deleteMessage']);
     Route::patch('/messages/{messageId}/read', [MessageController::class, 'readMessage']);
 
+    //Settings
     Route::patch('/settings', [SettingsController::class, 'updateSetting']);
-    //Route::get('/messages', [MessageController::class, 'getMessages']);
+
+    //Dashboard graphs
+    Route::get('/dashboard-total-products/{owner}', [ActivityController::class, 'dashboardTotalProducts']);
+    Route::get('/dashboard-total-sales-users', [ActivityController::class, 'dashboardTotalSalesUsers']);
+    
 });

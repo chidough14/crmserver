@@ -344,4 +344,103 @@ class ActivityController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function dashboardTotalProducts ($owner) {
+        if ($owner === "allusers") {
+            $activities = Activity::with("invoices")
+            ->where("probability", "Closed")
+            ->get();
+        } else {
+            $activities = Activity::with("invoices")
+            ->where("user_id", auth()->user()->id)
+            ->where("probability", "Closed")
+            ->get();
+        }
+       
+
+        $arr = array();
+        $arr_prod = array();
+
+        for ($i=0; $i<count($activities); $i++) {
+            $sortedArr = $activities[$i]->invoices->sortBy('created_at')->values();
+            array_push($arr, $sortedArr[count($sortedArr) - 1]);
+        }
+
+        for ($j=0; $j<count($arr); $j++) {
+           $inv= Invoice::where("id", $arr[$j]->id)->first();
+           $month = $inv->created_at->format('F');
+           $year = $inv->created_at->format('Y');
+
+           $sum = array_reduce($inv->products->toArray(), function($carry, $item) {
+                return $carry + ($item['price'] * $item['pivot']['quantity']);
+            });
+
+           $arr_prod[$month."-".$year][] = $sum;
+        }
+
+        $res = array();
+        foreach($arr_prod as $key=>$value) {
+            $sum2 = array_reduce($value, function($carry, $item) {
+                return $carry + $item;
+             });
+
+            $object = (object) [$key => $sum2];
+            $res[] = $object;
+        }
+
+        return response([
+            "results"=> $res,
+            'message' => 'Summary',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function dashboardTotalSalesUsers () {
+        $activities = Activity::with("invoices")
+        ->where("probability", "Closed")
+        ->get();
+
+        $arr = array();
+        $arr_prod = array();
+
+        for ($i=0; $i<count($activities); $i++) {
+            $sortedArr = $activities[$i]->invoices->sortBy('created_at')->values();
+            array_push($arr, $sortedArr[count($sortedArr) - 1]);
+        }
+
+        for ($j=0; $j<count($arr); $j++) {
+           $inv= Invoice::where("id", $arr[$j]->id)->first();
+
+           $sum = array_reduce($inv->products->toArray(), function($carry, $item) {
+                return $carry + ($item['price'] * $item['pivot']['quantity']);
+            });
+
+            $user = User::where("id", $inv->user_id)->first();
+
+           $arr_prod[$user->name][] = $sum;
+        }
+
+        $res = array();
+        foreach($arr_prod as $key=>$value) {
+            $sum2 = array_reduce($value, function($carry, $item) {
+                return $carry + $item;
+             });
+
+            $object = (object) [$key => $sum2];
+            $res[] = $object;
+        }
+
+        usort($res, function ($a, $b) {
+            return end($b) <=> end($a);
+        });
+        
+        // Return the first 5 elements
+        $top5 = array_slice($res, 0, 5);
+
+        return response([
+            "results"=> $top5,
+            'message' => 'Summary',
+            'status' => 'success'
+        ], 201);
+    }
 }
