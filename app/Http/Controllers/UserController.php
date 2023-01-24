@@ -36,7 +36,8 @@ class UserController extends Controller
         Settings::create([
             'user_id'=> $user->id,
             'calendar_mode'=> "week",
-            'dashboard_mode'=> "show_graphs"
+            'dashboard_mode'=> "show_graphs",
+            'product_sales_mode'=> "allusers"
         ]);
 
         return response([
