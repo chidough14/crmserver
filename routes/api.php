@@ -142,5 +142,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //Dashboard graphs
     Route::get('/dashboard-total-products/{owner}', [ActivityController::class, 'dashboardTotalProducts']);
     Route::get('/dashboard-total-sales-users', [ActivityController::class, 'dashboardTotalSalesUsers']);
+    Route::get('/dashboard-total-sales-topproducts', [ActivityController::class, 'dashboardTotalSalesTopProducts']);
     
 });

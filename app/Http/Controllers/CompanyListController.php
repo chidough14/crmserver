@@ -86,11 +86,19 @@ class CompanyListController extends Controller
 
         $lists = CompanyList::where("user_id", auth()->user()->id)->orderBy("created_at", "desc")->get();
 
-        return response([
-            'list'=> $lists[0],
-            'message' => 'Lists',
-            'status' => 'success'
-        ], 201);
+        if (count($lists)) {
+            return response([
+                'list'=> $lists[0],
+                'message' => 'Lists',
+                'status' => 'success'
+            ], 201);
+        } else {
+            return response([
+                'list'=> [],
+                'message' => 'Lists',
+                'status' => 'success'
+            ], 201);
+        }
     }
     
 
