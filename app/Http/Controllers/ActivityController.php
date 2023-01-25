@@ -437,8 +437,63 @@ class ActivityController extends Controller
         // Return the first 5 elements
         $top5 = array_slice($res, 0, 5);
 
+        $newArray = array_map(function($item) {
+            return array("name" => key($item), "total" => current($item));
+        }, $top5);
+
         return response([
-            "results"=> $top5,
+            "results"=> $newArray,
+            'message' => 'Summary',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function dashboardTotalSalesTopProducts () {
+        $activities = Activity::with("invoices")
+        ->where("probability", "Closed")
+        ->get();
+
+        $arr = array();
+        $arr_prod = array();
+
+        for ($i=0; $i<count($activities); $i++) {
+            $sortedArr = $activities[$i]->invoices->sortBy('created_at')->values();
+            array_push($arr, $sortedArr[count($sortedArr) - 1]);
+        }
+
+        for ($j=0; $j<count($arr); $j++) {
+           $inv= Invoice::where("id", $arr[$j]->id)->first();
+
+            for ($k=0; $k<count($inv->products); $k++) {
+                $arr_prod[] = $inv->products[$k];
+            }
+  
+        }
+
+      
+
+        $grouped = array_reduce($arr_prod, function ($result, $item) {
+            if (!isset($result[$item['name']])) {
+                $result[$item['name']] = array(
+                    "name" => $item['name'],
+                    "total" => $item['price'] * $item['pivot']['quantity']
+                );
+            } else {
+                $result[$item['name']]['total'] += $item['price'] * $item['pivot']['quantity'];
+            }
+            return $result;
+        }, array());
+        
+        // sort the array by total value in descending order
+        usort($grouped, function($a, $b) {
+            return $b['total'] <=> $a['total'];
+        });
+        
+        // return first 5 elements
+        $firstFive = array_slice($grouped, 0, 5);
+
+        return response([
+            "results"=> $firstFive,
             'message' => 'Summary',
             'status' => 'success'
         ], 201);
