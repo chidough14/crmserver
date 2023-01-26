@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('dashboard_mode')->nullable();
             $table->string('currency_mode')->nullable();
             $table->string('product_sales_mode')->nullable();
+            $table->string('top_sales_mode')->nullable();
             $table->timestamps();
         });
     }

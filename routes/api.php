@@ -42,6 +42,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/changepassword', [UserController::class, 'changePassword']);
 
     Route::get('/users', [UserController::class, 'getAllUsers']);
+    Route::patch('/users/{id}', [UserController::class, 'updateUserDetails']);
 
     //Company
     Route::post('/companies', [CompanyController::class, 'createCompany']);
