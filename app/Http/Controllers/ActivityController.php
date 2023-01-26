@@ -363,7 +363,10 @@ class ActivityController extends Controller
 
         for ($i=0; $i<count($activities); $i++) {
             $sortedArr = $activities[$i]->invoices->sortBy('created_at')->values();
-            array_push($arr, $sortedArr[count($sortedArr) - 1]);
+            if (count($sortedArr)) {
+                array_push($arr, $sortedArr[count($sortedArr) - 1]);
+            }
+           
         }
 
         for ($j=0; $j<count($arr); $j++) {
@@ -405,7 +408,10 @@ class ActivityController extends Controller
 
         for ($i=0; $i<count($activities); $i++) {
             $sortedArr = $activities[$i]->invoices->sortBy('created_at')->values();
-            array_push($arr, $sortedArr[count($sortedArr) - 1]);
+            // array_push($arr, $sortedArr[count($sortedArr) - 1]);
+            if (count($sortedArr)) {
+                array_push($arr, $sortedArr[count($sortedArr) - 1]);
+            }
         }
 
         for ($j=0; $j<count($arr); $j++) {
@@ -458,14 +464,17 @@ class ActivityController extends Controller
 
         for ($i=0; $i<count($activities); $i++) {
             $sortedArr = $activities[$i]->invoices->sortBy('created_at')->values();
-            array_push($arr, $sortedArr[count($sortedArr) - 1]);
+            // array_push($arr, $sortedArr[count($sortedArr) - 1]);
+            if (count($sortedArr)) {
+                array_push($arr, $sortedArr[count($sortedArr) - 1]);
+            }
         }
 
         for ($j=0; $j<count($arr); $j++) {
-           $inv= Invoice::where("id", $arr[$j]->id)->first();
+           //$inv= Invoice::where("id", $arr[$j]->id)->first();
 
-            for ($k=0; $k<count($inv->products); $k++) {
-                $arr_prod[] = $inv->products[$k];
+            for ($k=0; $k<count($arr[$j]->products); $k++) {
+                $arr_prod[] = $arr[$j]->products[$k];
             }
   
         }

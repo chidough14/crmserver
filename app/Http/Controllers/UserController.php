@@ -37,7 +37,8 @@ class UserController extends Controller
             'user_id'=> $user->id,
             'calendar_mode'=> "week",
             'dashboard_mode'=> "show_graphs",
-            'product_sales_mode'=> "allusers"
+            'product_sales_mode'=> "allusers",
+            'top_sales_mode'=> "salespersons"
         ]);
 
         return response([
@@ -109,13 +110,27 @@ class UserController extends Controller
             'status' => 'success'
         ], 201);
     }
-
+    
     public function getAllUsers () {
         $users = User::all();
 
         return response([
             'users'=> $users,
             'message' => 'All Users',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function updateUserDetails (Request $request, $id) {
+        $user = User::where("id", $id)->first();
+
+        $user->update($request->all());
+
+        $user->setting;
+
+        return response([
+            'user'=> $user,
+            'message' => 'Updated User Details',
             'status' => 'success'
         ], 201);
     }
