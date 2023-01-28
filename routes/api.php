@@ -9,6 +9,7 @@ use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -39,7 +40,9 @@ Route::post('/reset-password/{token}', [PasswordResetController::class, 'reset']
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [UserController::class, 'logout']);
     Route::get('/loggeduser', [UserController::class, 'loggedUser']);
-    Route::post('/changepassword', [UserController::class, 'changePassword']);
+
+    Route::post('/update-profile', [ProfileController::class, 'updateProfile']);
+    Route::get('/get-profile/{user_id}', [ProfileController::class, 'getUserProfile']);
 
     Route::get('/users', [UserController::class, 'getAllUsers']);
     Route::patch('/users/{id}', [UserController::class, 'updateUserDetails']);
