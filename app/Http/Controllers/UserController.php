@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Profile;
 use App\Models\Settings;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -39,6 +40,10 @@ class UserController extends Controller
             'dashboard_mode'=> "show_graphs",
             'product_sales_mode'=> "allusers",
             'top_sales_mode'=> "salespersons"
+        ]);
+
+        Profile::create([
+            'user_id'=> $user->id,
         ]);
 
         return response([

@@ -40,12 +40,56 @@ class ActivityController extends Controller
         ], 201);
     }
 
+    public function getTotals ($activities) {
+        foreach ($activities as $activity) {
+            if ($activity->probability === "Closed") {
+                $total = 0;
+            
+                if (count($activity->invoices)) {
+                    $sortedInvoices = $activity->invoices->sortBy('created_at')->values();
+                    $inv = Invoice::with('products')->where("id", $sortedInvoices[count($sortedInvoices) - 1]->id)->first();
+                    
+                
+                    foreach ($inv->products as $product) {
+                        $total += $product['price'] * $product['pivot']['quantity'];
+                    }
+                    
+                
+                    $activity['total'] = $total;
+                } else {
+                    $activity['total'] = 0;
+                }
+            
+
+            } else {
+                $total = 0;
+                foreach ($activity['products'] as $product) {
+                    $total += $product['price'] * $product['pivot']['quantity'];
+                }
+                $activity['total'] = $total;
+            }
+          
+        }
+
+        foreach ($activities as &$item) {
+            unset($item['products']);
+            unset($item['invoices']);
+        }
+
+        return $activities;
+    }
+
     public function getActivities () {
 
-        $activities = Activity::where("user_id", auth()->user()->id)->get();
+        $activities = Activity::with('products')->where("user_id", auth()->user()->id)->get();
+     
+
+        $res = $this->getTotals($activities);
+
+
 
         return response([
-            'activities'=> $activities,
+            'activities'=> $res,
             'message' => 'All activities',
             'status' => 'success'
         ], 201);
@@ -71,8 +115,11 @@ class ActivityController extends Controller
             ->get();
         } 
 
+
+        $res = $this->getTotals($activities);
+
         return response([
-            'activities'=> $activities,
+            'activities'=> $res,
             'message' => 'All activities',
             'status' => 'success'
         ], 201);
@@ -84,8 +131,10 @@ class ActivityController extends Controller
         ->where('label', 'like', '%'.$text.'%')
         ->get();
 
+        $res = $this->getTotals($activities);
+
         return response([
-            'activities'=> $activities,
+            'activities'=> $res,
             'message' => 'Activities results',
             'status' => 'success'
         ], 201);

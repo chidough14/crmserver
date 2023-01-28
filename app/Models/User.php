@@ -69,6 +69,11 @@ class User extends Authenticatable
         return $this->hasOne(Settings::class);
     }
 
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+
     // public function messages()
     // {
     //     return $this->hasMany(Message::class);
