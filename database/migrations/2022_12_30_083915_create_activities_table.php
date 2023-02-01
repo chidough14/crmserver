@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('company_id')->nullable();
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('set null');
             $table->string('probability');
+            $table->boolean('decreased_probability')->nullable();
             $table->string('status')->nullable();
             $table->integer('earningEstimate');
             $table->string('type');
