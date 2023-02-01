@@ -41,12 +41,19 @@ class MeetingController extends Controller
             return $p->event->start >= today();
         })->values();
 
+        $anyOneCanJoin = Meeting::with('event')
+        ->where('meetingType', 'Anyone-can-join')
+        ->get()
+        ->filter(function($p){
+            return $p->event->start >= today();
+        })->values();
+
+        $combinedArray = array_merge($invited->toArray(), $anyOneCanJoin->toArray());
         //$meetings->event();
 
         return response([
-            'today'=> today(),
             'meetings'=> $meetings,
-            'invitedMeetings'=> $invited,
+            'invitedMeetings'=> $combinedArray,
             'message' => 'Meetings',
             'status' => 'success'
         ], 201);
@@ -54,13 +61,27 @@ class MeetingController extends Controller
 
     public function getNotifications () {
 
-        $invited = Meeting::with('event')->whereJsonContains('invitedUsers', auth()->user()->email)->get();
-        $inBoxMessages = Message::where("receiver_id", auth()->user()->id)->get();
+        $invited = Meeting::with('event')
+        ->whereJsonContains('invitedUsers', auth()->user()->email)
+        ->get()
+        ->filter(function($p){
+            return $p->event->start >= today();
+        })->values();
 
+        $inBoxMessages = Message::where("receiver_id", auth()->user()->id)->where("isRead", '=', false)->get();
+
+        $anyOneCanJoin = Meeting::with('event')
+        ->where('meetingType', 'Anyone-can-join')
+        ->get()
+        ->filter(function($p){
+            return $p->event->start >= today();
+        })->values();
+
+        $combinedArray = array_merge($invited->toArray(), $anyOneCanJoin->toArray());
         //$meetings->event();
 
         return response([
-            'invitedMeetings'=> $invited,
+            'invitedMeetings'=> $combinedArray,
             'inbox'=> $inBoxMessages,
             'message' => 'Meetings',
             'status' => 'success'

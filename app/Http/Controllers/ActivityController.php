@@ -193,6 +193,30 @@ class ActivityController extends Controller
 
         $activity = Activity::where("id", $activityId)->first();
 
+        if (
+            ($activity->probability === "High" && $request->probability === "Medium") ||
+            ($activity->probability === "Medium" && $request->probability === "Low") ||
+            ($activity->probability === "High" && $request->probability === "Low")
+        
+        ) {
+            $activity->decreased_probability = true;
+            $activity->save();
+        } else if (
+            ($activity->probability === "Medium" && $request->probability === "High") ||
+            ($activity->probability === "Low" && $request->probability === "Medium") ||
+            ($activity->probability === "Low" && $request->probability === "High") 
+        ) {
+            $activity->decreased_probability = false;
+            $activity->save();
+        } else if (
+            ($activity->probability === "Medium" && $request->probability === "Closed") ||
+            ($activity->probability === "Low" && $request->probability === "Closed") ||
+            ($activity->probability === "High" && $request->probability === "Closed") 
+        ) {
+            $activity->decreased_probability = null;
+            $activity->save();
+        }
+        
         $activity->update($request->all());
 
         return response([

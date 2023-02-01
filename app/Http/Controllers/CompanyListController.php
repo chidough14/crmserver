@@ -33,7 +33,7 @@ class CompanyListController extends Controller
 
     public function getAllLists () {
 
-        $lists = CompanyList::where("user_id", auth()->user()->id)->paginate(5);
+        $lists = CompanyList::where("user_id", auth()->user()->id)->paginate(10);
 
         return response([
             'lists'=> $lists,
@@ -46,19 +46,19 @@ class CompanyListController extends Controller
         if ($critera === "1month") {
             $lists = CompanyList::where("user_id", auth()->user()->id)
             ->where('created_at', '>', now()->subDays(30)->endOfDay())
-            ->paginate(5);
+            ->paginate(10);
         } 
 
         if ($critera === "3months") {
             $lists = CompanyList::where("user_id", auth()->user()->id)
             ->where('created_at', '>', now()->subDays(60)->endOfDay())
-            ->paginate(5);
+            ->paginate(10);
         } 
 
         if ($critera === "12months") {
             $lists = CompanyList::where("user_id", auth()->user()->id)
             ->where('created_at', '>', now()->subDays(365)->endOfDay())
-            ->paginate(5);
+            ->paginate(10);
         } 
        
 
