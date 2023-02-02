@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('profile_pic')->nullable();
             $table->rememberToken();
             $table->boolean('tc');
+            $table->string('role')->nullable();
             $table->timestamps();
         });
     }

@@ -12,6 +12,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +47,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/users', [UserController::class, 'getAllUsers']);
     Route::patch('/users/{id}', [UserController::class, 'updateUserDetails']);
+
+    //admin
+    Route::patch('/admin-users/{id}', [AdminController::class, 'updateUserDetails']);
+    Route::delete('/admin-users/{id}', [AdminController::class, 'deleteUser']);
 
     //Company
     Route::post('/companies', [CompanyController::class, 'createCompany']);
