@@ -98,6 +98,8 @@ class InvoiceController extends Controller
 
         $invoice->update($request->all());
         $invoice->products;
+        $invoice->activity;
+        
 
         return response([
             'invoice'=> $invoice,
