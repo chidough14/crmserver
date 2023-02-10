@@ -39,7 +39,7 @@ class EventController extends Controller
         $arr = array();
         for ($i=0; $i < count($otherUsersEvents); $i++) {
             if($otherUsersEvents[$i]->meeting) {
-                if (in_array(auth()->user()->email, $otherUsersEvents[$i]->meeting->invitedUsers)) {
+                if (in_array(auth()->user()->email, $otherUsersEvents[$i]->meeting->invitedUsers) || $otherUsersEvents[$i]->meeting->meetingType === "Anyone-can-join") {
                     array_push($arr, $otherUsersEvents[$i]);
                 }
             }
@@ -64,7 +64,7 @@ class EventController extends Controller
         $arr = array();
         for ($i=0; $i < count($otherUsersEvents); $i++) {
             if($otherUsersEvents[$i]->meeting) {
-                if (in_array(auth()->user()->email, $otherUsersEvents[$i]->meeting->invitedUsers)) {
+                if (in_array(auth()->user()->email, $otherUsersEvents[$i]->meeting->invitedUsers) || $otherUsersEvents[$i]->meeting->meetingType === "Anyone-can-join") {
                     array_push($arr, $otherUsersEvents[$i]);
                 }
             }
