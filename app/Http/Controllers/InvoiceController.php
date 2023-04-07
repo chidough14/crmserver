@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Models\Invoice;
+use App\Models\StripePayment;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -144,7 +145,45 @@ class InvoiceController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function saveStripeOrder (Request $request) {
+       $order = new StripePayment();
+
+       $order->user_id = $request->user_id;
+       $order->products = json_encode($request->products);
+       $order->activity_id = $request->activity_id;
+       $order->total = $request->total;
+       $order->subtotal = $request->subtotal;
+       $order->shipping = json_encode($request->shipping);
+       $order->payment_status = $request->payment_status;
+       $order->delivery_status = $request->delivery_status;
+
+       $order->save();
+
+        return response([
+            'order'=> $order,
+            'message' => 'Order created successfully',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function getStripeOrders() {
+        $orders = StripePayment::where("user_id", auth()->user()->id)->paginate(5);
+
+        foreach ($orders as $order) {
+            $order['products'] = json_decode($order['products'], true);
+            $order['shipping'] = json_decode($order['shipping'], true);
+        }
+
+        return response([
+            'orders'=> $orders,
+            'message' => 'All stripe orders',
+            'status' => 'success'
+        ], 201);
+    }
 }
+
+
 
 
 // {

@@ -54,6 +54,13 @@ class PasswordResetController extends Controller
 
     }
 
+    public function order () {
+        return response([
+            'message' => 'Order created',
+            'status' => 'success'
+        ], 200);
+    }
+
     public function reset (Request $request, $token) {
         // Delete token older than 1 minute
         $formatted = Carbon::now()->subMinutes(1)->toDateTimeString();
