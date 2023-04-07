@@ -37,6 +37,8 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/send-reset-password-email', [PasswordResetController::class, 'send_reset_password_email']);
 Route::post('/reset-password/{token}', [PasswordResetController::class, 'reset']);
 
+
+
 // Private Routes
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [UserController::class, 'logout']);
@@ -126,6 +128,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/invoices/{invoiceId}/addUpdateProduct', [InvoiceController::class, 'addUpdateProduct']);
     Route::delete('/invoices/{invoiceId}/deleteProduct', [InvoiceController::class, 'deleteProduct']);
     Route::get('/filter-invoices/{critera}', [InvoiceController::class, 'filterInvoices']);
+
+    Route::post('/create-order', [InvoiceController::class, 'saveStripeOrder']);
+    Route::get('/stripe-orders', [InvoiceController::class, 'getStripeOrders']);
 
     // Meetings
     Route::post('/meetings', [MeetingController::class, 'createMeeting']);
