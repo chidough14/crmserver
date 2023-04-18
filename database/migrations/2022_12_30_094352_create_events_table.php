@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('title');
             $table->string('description')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('activity_id')->nullable();
-            $table->foreign('activity_id')->references('id')->on('activities')->onDelete('cascade');
+           // $table->foreign('activity_id')->references('id')->on('activities')->onDelete('cascade');
             $table->string('start');
             $table->string('end');
             $table->timestamps();

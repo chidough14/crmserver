@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id')->nullable();
+            //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('type')->nullable();
             $table->timestamps();
         });

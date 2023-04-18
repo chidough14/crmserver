@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('assignedTo');
             $table->string('description')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            //$table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->unsignedBigInteger('company_id')->nullable();
-            $table->foreign('company_id')->references('id')->on('companies')->onDelete('set null');
+            //$table->foreign('company_id')->references('id')->on('companies')->onDelete('set null');
             $table->string('probability');
             $table->boolean('decreased_probability')->nullable();
             $table->string('status')->nullable();

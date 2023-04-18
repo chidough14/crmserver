@@ -24,9 +24,9 @@ return new class extends Migration
             $table->integer('payment_term')->nullable();
             $table->string('type')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();;
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('activity_id')->nullable();
-            $table->foreign('activity_id')->references('id')->on('activities')->onDelete('cascade');
+            //$table->foreign('activity_id')->references('id')->on('activities')->onDelete('cascade');
             $table->timestamps();
         });
     }
