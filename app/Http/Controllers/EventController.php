@@ -6,6 +6,8 @@ use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\isNull;
+
 class EventController extends Controller
 {
     public function createEvent (Request $request) {
@@ -95,7 +97,7 @@ class EventController extends Controller
 
     public function updateEvent (Request $request, $eventId) {
 
-        $event = Event::where("id", $eventId)->first();
+        $event = Event::with("meeting")->where("id", $eventId)->first();
 
         $request->validate([
             'start'=> 'date',
@@ -103,6 +105,15 @@ class EventController extends Controller
         ]);
 
         $event->update($request->all());
+
+        if($event->meeting !== null) {
+            $dateTime = Carbon::parse($event->start);
+            $dateOnly = $dateTime->format('m/d/Y');
+
+            $event->meeting->update([
+                "meetingDate" => $dateOnly
+            ]);
+        }
 
         return response([
             'event'=> $event,
