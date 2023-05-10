@@ -19,6 +19,8 @@ class EventController extends Controller
 
         $event = Event::create($request->all());
 
+        $event->meeting;
+
         return response([
             'event'=> $event,
             'message' => 'Event created successfully',
