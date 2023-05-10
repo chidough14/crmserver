@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Meeting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -18,6 +19,8 @@ class EventController extends Controller
         ]);
 
         $event = Event::create($request->all());
+
+        $event->meeting;
 
         return response([
             'event'=> $event,
@@ -127,6 +130,10 @@ class EventController extends Controller
         $event = Event::where("id", $eventId)->first();
 
         $event->delete();
+
+        // For planetscale
+        $meeting = Meeting::where("event_id", $eventId)->first();
+        $meeting->delete();
 
         return response([
             'message' => 'Event deleted',
