@@ -13,6 +13,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\LogoutController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,8 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/send-reset-password-email', [PasswordResetController::class, 'send_reset_password_email']);
 Route::post('/reset-password/{token}', [PasswordResetController::class, 'reset']);
+Route::post('/addlogout', [LogoutController::class, 'addlogout']);
+Route::get('/userlogout/{id}', [LogoutController::class, 'userlogout']);
 
 
 
