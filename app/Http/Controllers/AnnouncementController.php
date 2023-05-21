@@ -20,20 +20,29 @@ class AnnouncementController extends Controller
 
 
     public function addAnnouncement (Request $request) {
-        $request->validate([
-            'message'=> 'required',
-        ]);
+        if (auth()->user()->role !== "super admin") {
+            return response([
+                'message' => 'You are nou authorized',
+                'status' => 'Unauthorized'
+            ], 201);
 
-        $announcement = Announcement::create([
-            'message'=> $request->message,
-            'link'=> $request->link,
-        ]);
-
-        return response([
-            'announcement'=> $announcement,
-            'message' => 'Announcement created successfully',
-            'status' => 'success'
-        ], 201);
+        } else {
+            $request->validate([
+                'message'=> 'required',
+            ]);
+    
+            $announcement = Announcement::create([
+                'message'=> $request->message,
+                'link'=> $request->link,
+            ]);
+    
+            return response([
+                'announcement'=> $announcement,
+                'message' => 'Announcement created successfully',
+                'status' => 'success'
+            ], 201);
+        }
+       
     }
 
     public function getAnnouncement ($id) {
