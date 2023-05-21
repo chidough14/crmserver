@@ -13,6 +13,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\LogoutController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -160,5 +161,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/dashboard-total-products/{owner}', [ActivityController::class, 'dashboardTotalProducts']);
     Route::get('/dashboard-total-sales-users', [ActivityController::class, 'dashboardTotalSalesUsers']);
     Route::get('/dashboard-total-sales-topproducts', [ActivityController::class, 'dashboardTotalSalesTopProducts']);
+
+
+    //admin announcements
+    Route::get('/announcements', [AnnouncementController::class, 'getAnnouncements']);
+    Route::post('/announcements', [AnnouncementController::class, 'addAnnouncement']);
+    Route::get('/announcements/{id}', [AnnouncementController::class, 'getAnnouncement']);
+    Route::patch('/announcements/{id}', [AnnouncementController::class, 'updateAnnouncement']);
+    Route::delete('/announcements/{id}', [AnnouncementController::class, 'deleteAnnouncement']);
     
 });
