@@ -78,4 +78,14 @@ class AnnouncementController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function dashboardAnnouncements () {
+        $latestRecords = Announcement::latest('created_at')->take(3)->get();
+
+        return response([
+            'announcements'=> $latestRecords,
+            'message' => 'Announcements result',
+            'status' => 'success'
+        ], 201);
+    }
 }
