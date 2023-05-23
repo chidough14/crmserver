@@ -169,5 +169,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/announcements/{id}', [AnnouncementController::class, 'getAnnouncement']);
     Route::patch('/announcements/{id}', [AnnouncementController::class, 'updateAnnouncement']);
     Route::delete('/announcements/{id}', [AnnouncementController::class, 'deleteAnnouncement']);
+
+    Route::get('/dashboardannouncements', [AnnouncementController::class, 'dashboardAnnouncements']);
     
 });
