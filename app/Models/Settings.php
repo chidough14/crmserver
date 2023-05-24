@@ -10,7 +10,7 @@ class Settings extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'calendar_mode','dashboard_mode', 'currency_mode', 'product_sales_mode', 'top_sales_mode'
+        'user_id', 'calendar_mode','dashboard_mode', 'currency_mode', 'product_sales_mode', 'top_sales_mode', 'announcements_mode'
     ];
 
     public function user()
