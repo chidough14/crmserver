@@ -40,7 +40,8 @@ class UserController extends Controller
             'calendar_mode'=> "week",
             'dashboard_mode'=> "show_graphs",
             'product_sales_mode'=> "allusers",
-            'top_sales_mode'=> "salespersons"
+            'top_sales_mode'=> "salespersons",
+            'announcements_mode'=> "show"
         ]);
 
         Profile::create([
