@@ -15,6 +15,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -171,5 +172,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/announcements/{id}', [AnnouncementController::class, 'deleteAnnouncement']);
 
     Route::get('/dashboardannouncements', [AnnouncementController::class, 'dashboardAnnouncements']);
+
+    Route::post('/filter-announcements', [AnnouncementController::class, 'filterAnnouncements']);
+
+    // announcements categories
+    Route::get('/categories', [CategoryController::class, 'getCategories']);
+    Route::post('/categories', [CategoryController::class, 'addCategory']);
+    Route::get('/categories/{id}', [CategoryController::class, 'getCategory']);
+    Route::patch('/categories/{id}', [CategoryController::class, 'updateCategory']);
+    Route::delete('/categories/{id}', [CategoryController::class, 'deleteCategory']);
     
 });

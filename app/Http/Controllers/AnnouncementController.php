@@ -18,6 +18,17 @@ class AnnouncementController extends Controller
 
     }
 
+    public function filterAnnouncements (Request $request) {
+        $announcements = Announcement::whereIn("category_id", (array) $request->ids)->paginate(5);
+
+        return response([
+            'announcements'=> $announcements,
+            'message' => 'Announcements results',
+            'status' => 'success'
+        ], 201);
+
+    }
+
 
     public function addAnnouncement (Request $request) {
         if (auth()->user()->role !== "super admin") {
@@ -34,6 +45,7 @@ class AnnouncementController extends Controller
             $announcement = Announcement::create([
                 'message'=> $request->message,
                 'link'=> $request->link,
+                'category_id'=> $request->category_id,
             ]);
     
             return response([

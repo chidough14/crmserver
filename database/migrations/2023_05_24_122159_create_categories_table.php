@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('announcements', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string("message");
-            $table->string("link")->nullable();
-            $table->unsignedBigInteger('category_id')->nullable();
-            //$table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->string("name");
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('announcements');
+        Schema::dropIfExists('categories');
     }
 };
