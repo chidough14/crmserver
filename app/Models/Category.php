@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Announcement extends Model
+class Category extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'message','link', 'category_id'
+        'name'
     ];
 
-    public function category()
+    public function announcements()
     {
-        return $this->belongsTo(Category::class);
+        return $this->hasMany(Announcement::class);
     }
 
 }
