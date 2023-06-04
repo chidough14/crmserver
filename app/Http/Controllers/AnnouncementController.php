@@ -29,6 +29,19 @@ class AnnouncementController extends Controller
 
     }
 
+    public function searchAnnouncements (Request $request) {
+
+        $text = $request->query('query');
+        $announcements = Announcement::where('message', 'like', '%'.$text.'%')->paginate(5);
+
+        return response([
+            'announcements'=> $announcements,
+            'message' => 'Announcements results',
+            'status' => 'success'
+        ], 201);
+
+    }
+
 
     public function addAnnouncement (Request $request) {
         if (auth()->user()->role !== "super admin") {
