@@ -174,6 +174,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/dashboardannouncements', [AnnouncementController::class, 'dashboardAnnouncements']);
 
     Route::post('/filter-announcements', [AnnouncementController::class, 'filterAnnouncements']);
+    Route::get('/search-announcements', [AnnouncementController::class, 'searchAnnouncements']);
 
     // announcements categories
     Route::get('/categories', [CategoryController::class, 'getCategories']);
