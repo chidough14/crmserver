@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class AnnouncementController extends Controller
 {
     public function getAnnouncements () {
-        $announcements = Announcement::paginate(5);
+        $announcements = Announcement::orderBy('created_at', 'desc')->paginate(5);
 
         return response([
             'announcements'=> $announcements,
@@ -19,7 +19,7 @@ class AnnouncementController extends Controller
     }
 
     public function filterAnnouncements (Request $request) {
-        $announcements = Announcement::whereIn("category_id", (array) $request->ids)->paginate(5);
+        $announcements = Announcement::whereIn("category_id", (array) $request->ids)->orderBy('created_at', 'desc')->paginate(5);
 
         return response([
             'announcements'=> $announcements,
@@ -29,10 +29,31 @@ class AnnouncementController extends Controller
 
     }
 
+    public function filterAnnouncementsByDate ( $critera) {
+        if ($critera === "1month") {
+            $announcements = Announcement::where('created_at', '>', now()->subDays(30)->endOfDay())->paginate(5);
+        } 
+
+        if ($critera === "3months") {
+            $announcements = Announcement::where('created_at', '>', now()->subDays(60)->endOfDay())->paginate(5);
+        } 
+
+        if ($critera === "12months") {
+            $announcements = Announcement::where('created_at', '>', now()->subDays(365)->endOfDay())->paginate(5);
+        } 
+
+        return response([
+            'announcements'=> $announcements,
+            'message' => 'Sorted Announcements results',
+            'status' => 'success'
+        ], 201);
+
+    }
+
     public function searchAnnouncements (Request $request) {
 
         $text = $request->query('query');
-        $announcements = Announcement::where('message', 'like', '%'.$text.'%')->paginate(5);
+        $announcements = Announcement::where('message', 'like', '%'.$text.'%')->orderBy('created_at', 'desc')->paginate(5);
 
         return response([
             'announcements'=> $announcements,
