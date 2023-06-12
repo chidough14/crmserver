@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('sender_id')->nullable();
             $table->unsignedBigInteger('receiver_id')->nullable();
             $table->boolean('isRead')->nullable()->default(false);
+            $table->dateTime('deleted_at')->nullable();
             $table->timestamps();
         });
     }

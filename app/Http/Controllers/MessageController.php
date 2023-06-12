@@ -132,18 +132,42 @@ class MessageController extends Controller
 
         if (($message->sender_id !== auth()->user()->id)) {
 
+            $message->delete();
+
             return response([
-                'message' => 'Not allowed',
+                'message' => 'Message soft deleted',
                 'status' => 'success'
             ], 201);
         } else {
 
-            $message->delete();
+            $message->forceDelete();
 
             return response([
                 'message' => 'Message deleted',
                 'status' => 'success'
             ], 201);
+        }
+
+    }
+
+    public function massDeleteMessages (Request $request) {
+
+        if ($request->mode === "inbox") {
+            Message::whereIn('id', $request->messageIds)->delete();
+
+            return response([
+                'message' => 'Messages soft deleted',
+                'status' => 'success'
+            ], 201);
+         
+        } else {
+            Message::whereIn('id', $request->messageIds)->forceDelete();
+
+            return response([
+                'message' => 'Messages  deleted',
+                'status' => 'success'
+            ], 201);
+            
         }
 
     }
