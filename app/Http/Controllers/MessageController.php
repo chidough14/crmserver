@@ -172,6 +172,28 @@ class MessageController extends Controller
 
     }
 
+    public function massReadMessages (Request $request) {
+
+        $readTrueArray = [];
+        $readFalseArray = [];
+
+        foreach ($request->messageIds as $item) {
+            if ($item['read']) {
+                $readTrueArray[] = $item["id"];
+            } else {
+                $readFalseArray[] = $item["id"];
+            }
+        }
+
+        Message::whereIn('id', $readFalseArray)->update(["isRead" => true]);
+        Message::whereIn('id', $readTrueArray)->update(["isRead" => false]);
+
+        return response([
+            'message' => 'Messages updated',
+            'status' => 'success'
+        ], 201);
+    }
+
     public function readMessage (Request $request, $messageId) {
         $message = Message::where("id", $messageId)->first();
 
