@@ -156,6 +156,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::patch('/messages/{messageId}/read', [MessageController::class, 'readMessage']);
 
     Route::post('/mass-delete-messages', [MessageController::class, 'massDeleteMessages']);
+    Route::post('/mass-mark-as-read', [MessageController::class, 'massReadMessages']);
 
     //Settings
     Route::patch('/settings', [SettingsController::class, 'updateSetting']);
