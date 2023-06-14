@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Mail\Message as MailMessage;
 use Illuminate\Support\Str; 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class MessageController extends Controller
 {
@@ -68,8 +70,25 @@ class MessageController extends Controller
     }
 
     public function getInboxMessages () {
+        $lastFetchTimestamp = Cache::get('last_fetch_timestamp');
 
         $inBoxMessages = Message::where("receiver_id", auth()->user()->id)->orderBy('created_at', 'DESC')->paginate(5);
+
+        foreach ($inBoxMessages as $record) {
+            if ($record->created_at >= $lastFetchTimestamp) {
+                // This is a newly added record
+                // You can handle it accordingly
+                $record->new = true;
+            }
+        }
+
+        // Get the current timestamp
+        $currentTimestamp = Carbon::now();
+
+        // Update the last fetch timestamp with the current timestamp
+        $lastFetchTimestamp = $currentTimestamp;
+
+        Cache::put('last_fetch_timestamp', $lastFetchTimestamp);
 
         return response([
             'inbox'=> $inBoxMessages,
@@ -151,9 +170,14 @@ class MessageController extends Controller
     }
 
     public function massDeleteMessages (Request $request) {
+        $arr = [];
+
+        foreach ($request->messageIds as $item) {
+            $arr[] = $item["id"];
+        }
 
         if ($request->mode === "inbox") {
-            Message::whereIn('id', $request->messageIds)->delete();
+            Message::whereIn('id', $arr)->delete();
 
             return response([
                 'message' => 'Messages soft deleted',
@@ -161,7 +185,7 @@ class MessageController extends Controller
             ], 201);
          
         } else {
-            Message::whereIn('id', $request->messageIds)->forceDelete();
+            Message::whereIn('id', $arr)->forceDelete();
 
             return response([
                 'message' => 'Messages  deleted',
