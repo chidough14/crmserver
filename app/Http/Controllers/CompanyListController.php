@@ -140,6 +140,16 @@ class CompanyListController extends Controller
         ], 201);
     }
 
+    public function bulkDeleteLists (Request $request) {
+
+        CompanyList::whereIn('id', $request->listIds)->delete();
+
+        return response([
+            'message' => 'Lists deleted',
+            'status' => 'success'
+        ], 201);
+    }
+
     public function getUserListsAndCompanies () {
 
         $lists = CompanyList::where('user_id', auth()->user()->id)->with('companies')->get();
