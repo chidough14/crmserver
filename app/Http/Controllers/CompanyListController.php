@@ -271,4 +271,41 @@ class CompanyListController extends Controller
 
 
     }
+
+    public function bulkTransferList (Request $request) {
+        $request->validate([
+            'listIds'=> 'required',
+            'email' => 'required'
+        ]);
+
+        $newOwner = User::where("email", $request->email)->first();
+            
+        if ($newOwner === null) {
+            return response([
+                'message' => 'Email does not exit',
+                'status' => 'error'
+            ], 201);
+        }
+
+        
+        foreach ($request->listIds as $item) {
+            $list = CompanyList::where("id", $item)->first();
+    
+            $ownList = true;
+    
+            $transferedList = $this->createClone($list, $ownList, $newOwner );
+
+            $res = new Message();
+            $res->subject = "List Tranfer";
+            $res->message = "A list $transferedList->name ($transferedList->id) has been transfered to you";
+            $res->receiver_id =  $newOwner->id;
+
+            $res->save();
+        }
+
+        return response([
+            'message' => 'List Transfered',
+            'status' => 'success'
+        ], 201);
+    }
 }
