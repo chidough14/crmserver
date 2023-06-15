@@ -79,6 +79,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/userListsAndCompanies', [CompanyListController::class, 'getUserListsAndCompanies']);
     Route::get('/mylists/{listId}/clone', [CompanyListController::class, 'cloneList']);
     Route::post('/mylists/{listId}/transfer', [CompanyListController::class, 'transferList']);
+    Route::post('/mylists/bulk-transfer', [CompanyListController::class, 'bulkTransferList']);
     Route::get('/mylists-dashboard', [CompanyListController::class, 'getDashboardLists']);
 
     Route::get('/filter-lists/{critera}', [CompanyListController::class, 'filterLists']);
