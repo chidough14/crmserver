@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->integer('earningEstimate');
             $table->string('type');
+            $table->dateTime('deleted_at')->nullable();
             $table->timestamps();
         });
     }

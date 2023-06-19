@@ -418,6 +418,43 @@ class ActivityController extends Controller
         ], 201);
     }
 
+    public function bulkTransfer (Request $request) {
+        $request->validate([
+            'activityIds'=> 'required',
+            'email' => 'required'
+        ]);
+
+        $newOwner = User::where("email", $request->email)->first();
+
+        if ($newOwner === null) {
+            return response([
+                'message' => 'Email does not exit',
+                'status' => 'error'
+            ], 201);
+        }
+
+        foreach ($request->activityIds as $item) {
+            $activity = Activity::where("id", $item)->first();
+            $ownActivity = true;
+
+            $transferedActivity = $this->createClone($activity, $ownActivity, $newOwner );
+    
+            $res = new Message();
+            $res->subject = "Activity Tranfer";
+            $res->message = "An activity $transferedActivity->label ($transferedActivity->id) has been transfered to you";
+            $res->receiver_id =  $newOwner->id;
+    
+            $res->save();
+        }
+
+        
+        return response([
+            'message' => 'Activities Transfered',
+            'status' => 'success'
+        ], 201);
+
+    }
+
     public function dashboardTotalProducts ($owner) {
         if ($owner === "allusers") {
             $activities = Activity::with("invoices")
@@ -577,6 +614,25 @@ class ActivityController extends Controller
         return response([
             "results"=> $firstFive,
             'message' => 'Summary',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function getActivitiesWithTrashed () {
+        $activities = Activity::where("user_id", auth()->user()->id)->withTrashed()->get();
+
+        $res = $this->getTotals($activities);
+
+        foreach ($res as $key => $item) {
+            if ($item['deleted_at'] === null) {
+                unset($res[$key]);
+            }
+        }
+
+
+        return response([
+            'activities'=> $res ,
+            'message' => 'Activities with Trashed',
             'status' => 'success'
         ], 201);
     }

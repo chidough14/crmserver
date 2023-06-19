@@ -108,6 +108,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/activities-summary', [ActivityController::class, 'getActivitiesSummary']);
     Route::get('/filter-activities/{critera}', [ActivityController::class, 'filterActivities']);
     Route::get('/search-activities',  [ActivityController::class, 'searchActivities']);
+    Route::get('/activities-with-trashed', [ActivityController::class, 'getActivitiesWithTrashed']);
+    Route::post('/activities-bulk-transfer', [ActivityController::class, 'bulkTransfer']);
 
     //Events
 
