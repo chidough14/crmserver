@@ -81,7 +81,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/mylists/{listId}/transfer', [CompanyListController::class, 'transferList']);
     Route::post('/mylists/bulk-transfer', [CompanyListController::class, 'bulkTransferList']);
     Route::post('/mylists/bulk-delete', [CompanyListController::class, 'bulkDeleteLists']);
+    Route::get('/mylists-with-trashed', [CompanyListController::class, 'getAllListsWithTrashed']);
     Route::get('/mylists-dashboard', [CompanyListController::class, 'getDashboardLists']);
+    Route::get('/mylists-restore/{listId}', [CompanyListController::class, 'restoreList']);
+    Route::delete('/mylists-force-delete/{listId}', [CompanyListController::class, 'forceDeleteList']);
+    Route::post('/mylists-bulk-restore', [CompanyListController::class, 'bulkRestoreList']);
+    Route::post('/mylists-bulk-force-delete', [CompanyListController::class, 'bulkForceDelete']);
 
     Route::get('/filter-lists/{critera}', [CompanyListController::class, 'filterLists']);
     Route::get('/search-lists',  [CompanyListController::class, 'searchLists']);
@@ -103,6 +108,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/activities-summary', [ActivityController::class, 'getActivitiesSummary']);
     Route::get('/filter-activities/{critera}', [ActivityController::class, 'filterActivities']);
     Route::get('/search-activities',  [ActivityController::class, 'searchActivities']);
+    Route::get('/activities-with-trashed', [ActivityController::class, 'getActivitiesWithTrashed']);
+    Route::post('/activities-bulk-transfer', [ActivityController::class, 'bulkTransfer']);
 
     //Events
 

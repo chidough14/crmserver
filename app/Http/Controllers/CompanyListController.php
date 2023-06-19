@@ -150,6 +150,16 @@ class CompanyListController extends Controller
         ], 201);
     }
 
+    public function bulkForceDelete (Request $request) {
+
+        CompanyList::whereIn('id', $request->listIds)->forceDelete();
+
+        return response([
+            'message' => 'Lists deleted',
+            'status' => 'success'
+        ], 201);
+    }
+
     public function getUserListsAndCompanies () {
 
         $lists = CompanyList::where('user_id', auth()->user()->id)->with('companies')->get();
@@ -315,6 +325,60 @@ class CompanyListController extends Controller
 
         return response([
             'message' => 'List Transfered',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function getAllListsWithTrashed () {
+        
+        $lists = CompanyList::where("user_id", auth()->user()->id)->withTrashed()->paginate(10);
+
+        foreach ($lists as $key => $item) {
+            if ($item['deleted_at'] === null) {
+                unset($lists[$key]);
+            }
+        }
+
+
+        return response([
+            'lists'=> $lists ,
+            'message' => 'Lists',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function restoreList ($listId) {
+        $record = CompanyList::withTrashed()->find($listId);
+
+        $record->restore();
+
+        return response([
+            'message' => 'List restored',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function bulkRestoreList (Request $request) {
+       
+        foreach ($request->listIds as $key => $item) {
+            $record = CompanyList::withTrashed()->find($item);
+
+            $record->restore();
+        }
+
+        return response([
+            'message' => 'Lists restored',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function forceDeleteList ($listId) {
+        $record = CompanyList::withTrashed()->find($listId);
+
+        $record->forceDelete();
+
+        return response([
+            'message' => 'List deleted',
             'status' => 'success'
         ], 201);
     }
