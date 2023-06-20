@@ -110,6 +110,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/search-activities',  [ActivityController::class, 'searchActivities']);
     Route::get('/activities-with-trashed', [ActivityController::class, 'getActivitiesWithTrashed']);
     Route::post('/activities-bulk-transfer', [ActivityController::class, 'bulkTransfer']);
+    Route::post('/activities-bulk-delete', [ActivityController::class, 'bulkDeleteActivities']);
 
     //Events
 
