@@ -646,4 +646,46 @@ class ActivityController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function restoreActivity ($id) {
+        $record = Activity::withTrashed()->find($id);
+
+        $record->restore();
+
+        return response([
+            'message' => 'Activity restored',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function forceDeleteActivity ($id) {
+        $record = Activity::withTrashed()->find($id);
+
+        $record->forceDelete();
+
+        return response([
+            'message' => 'Activity deleted',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function bulkRestoreActivities (Request $request) {
+
+        Activity::whereIn('id', $request->activityIds)->restore();
+
+        return response([
+            'message' => 'Activities restored',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function bulkForceDeleteActivities (Request $request) {
+
+        Activity::whereIn('id', $request->activityIds)->forceDelete();
+
+        return response([
+            'message' => 'Activities deleted',
+            'status' => 'success'
+        ], 201);
+    }
 }
