@@ -239,6 +239,16 @@ class ActivityController extends Controller
         ], 201);
     }
 
+    public function bulkDeleteActivities (Request $request) {
+
+        Activity::whereIn('id', $request->activityIds)->delete();
+
+        return response([
+            'message' => 'Activities deleted',
+            'status' => 'success'
+        ], 201);
+    }
+
     public function addUpdateProduct (Request $request, $activityId) {
 
         $activity = Activity::where("id", $activityId)->first();
