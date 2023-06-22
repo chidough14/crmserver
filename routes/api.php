@@ -67,6 +67,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::patch('/companies/{companyId}',  [CompanyController::class, 'updateCompany']);
     Route::delete('/companies/{companyId}',  [CompanyController::class, 'deleteCompany']);
     Route::post('/companies/{companyId}/lists',  [CompanyController::class, 'addCompanyToList']);
+    Route::post('/companies-bulk-delete',  [CompanyController::class, 'bulkDeleteCompanies']);
+    Route::post('/companies-add-bulk',  [CompanyController::class, 'bulkAddCompanies']);
     Route::delete('/companies/{companyId}/lists',  [CompanyController::class, 'deleteCompanyFromList']);
 
     // Lists
