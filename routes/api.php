@@ -136,6 +136,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
      Route::patch('/products/{productId}', [ProductController::class, 'updateProduct']);
      Route::delete('/products/{productId}', [ProductController::class, 'deleteProduct']);
      Route::get('/products-all', [ProductController::class, 'getProductsNoPagination']);
+     Route::post('/products-bulk-delete',  [ProductController::class, 'bulkDeleteProducts']);
+     Route::post('/products-add-bulk',  [ProductController::class, 'bulkAddProducts']);
 
 
     //Invoices
