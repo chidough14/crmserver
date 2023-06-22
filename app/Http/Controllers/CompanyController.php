@@ -109,4 +109,25 @@ class CompanyController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function bulkDeleteCompanies (Request $request){
+        Company::whereIn('id', $request->companyIds)->delete();
+
+        return response([
+            'message' => 'Companies deleted',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function bulkAddCompanies (Request $request){
+        $newRecords = collect($request->companiesPayload)->map(function ($item) {
+            return Company::create($item);
+        });
+
+        return response([
+            'companies'=> $newRecords,
+            'message' => 'Companies added',
+            'status' => 'success'
+        ], 201);
+    }
 }
