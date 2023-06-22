@@ -83,4 +83,26 @@ class ProductController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function bulkDeleteProducts (Request $request) {
+
+        Product::whereIn('id', $request->productIds)->delete();
+
+        return response([
+            'message' => 'Products deleted',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function bulkAddProducts (Request $request) {
+        $newRecords = collect($request->productsPayload)->map(function ($item) {
+            return Product::create($item);
+        });
+
+        return response([
+            'products'=> $newRecords,
+            'message' => 'Products added',
+            'status' => 'success'
+        ], 201);
+    }
 }
