@@ -58,6 +58,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //admin
     Route::patch('/admin-users/{id}', [AdminController::class, 'updateUserDetails']);
     Route::delete('/admin-users/{id}', [AdminController::class, 'deleteUser']);
+    Route::post('/admin-users-bulk-delete', [AdminController::class, 'bulkDeleteUsers']);
+    Route::post('/admin-users-bulk-update', [AdminController::class, 'bulkUpdateUsers']);
 
     //Company
     Route::post('/companies', [CompanyController::class, 'createCompany']);
