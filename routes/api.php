@@ -199,6 +199,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/filter-announcements', [AnnouncementController::class, 'filterAnnouncements']);
     Route::get('/search-announcements', [AnnouncementController::class, 'searchAnnouncements']);
     Route::get('/filter-announcements-by-date/{criteria}', [AnnouncementController::class, 'filterAnnouncementsByDate']);
+    Route::post('/announcements-bulk-delete', [AnnouncementController::class, 'bulkDelete']);
+    Route::post('/announcements-bulk-add', [AnnouncementController::class, 'bulkAdd']);
 
     // announcements categories
     Route::get('/categories', [CategoryController::class, 'getCategories']);

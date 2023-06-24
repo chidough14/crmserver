@@ -134,4 +134,25 @@ class AnnouncementController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function bulkDelete (Request $request) {
+        Announcement::whereIn('id', $request->announcementsIds)->delete();
+
+        return response([
+            'message' => 'Announcements deleted',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function bulkAdd (Request $request) {
+        $newRecords = collect($request->announcementsPayload)->map(function ($item) {
+            return Announcement::create($item);
+        });
+
+        return response([
+            'announcements'=> $newRecords,
+            'message' => 'Announcements added',
+            'status' => 'success'
+        ], 201);
+    }
 }
