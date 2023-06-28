@@ -48,7 +48,13 @@ class MessageController extends Controller
                 'message'=> 'required'
             ]);
 
-            $resp = Message::create($request->all());
+            $resp = Message::create([
+                "message" => $request->message,
+                "subject" => $request->subject,
+                "quill_message" => json_encode($request->quill_message),
+                "receiver_id" => $request->receiver_id,
+                "sender_id" => $request->sender_id
+            ]);
 
             $user = User::where("id", $request->receiver_id)->first();
             $email = $user->email;
@@ -75,6 +81,7 @@ class MessageController extends Controller
         $inBoxMessages = Message::where("receiver_id", auth()->user()->id)->orderBy('created_at', 'DESC')->paginate(5);
 
         foreach ($inBoxMessages as $record) {
+            $record->quill_message = json_decode($record->quill_message);
             if ($record->created_at >= $lastFetchTimestamp) {
                 // This is a newly added record
                 // You can handle it accordingly
@@ -100,6 +107,10 @@ class MessageController extends Controller
 
     public function getOutboxMessages () {
         $outBoxMessages = Message::where("sender_id", auth()->user()->id)->orderBy('created_at', 'DESC')->paginate(5);
+
+        foreach ($outBoxMessages as $record) {
+            $record->quill_message = json_decode($record->quill_message);
+        }
 
         return response([
             'outbox' => $outBoxMessages,

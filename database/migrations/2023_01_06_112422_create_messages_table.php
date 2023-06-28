@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('receiver_id')->nullable();
             $table->boolean('isRead')->nullable()->default(false);
             $table->dateTime('deleted_at')->nullable();
+            $table->json('quill_message')->nullable();
             $table->timestamps();
         });
     }
