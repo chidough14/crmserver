@@ -208,5 +208,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/categories/{id}', [CategoryController::class, 'getCategory']);
     Route::patch('/categories/{id}', [CategoryController::class, 'updateCategory']);
     Route::delete('/categories/{id}', [CategoryController::class, 'deleteCategory']);
+    Route::post('/categories-bulk-add', [CategoryController::class, 'bulkAddCategory']);
     
 });
