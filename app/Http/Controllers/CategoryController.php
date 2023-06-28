@@ -76,4 +76,16 @@ class CategoryController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function bulkAddCategory (Request $request) {
+        $newRecords = collect($request->categoriesPayload)->map(function ($item) {
+            return Category::create($item);
+        });
+        
+        return response([
+            'categories' => $newRecords,
+            'message' => 'Categories added',
+            'status' => 'success'
+        ], 201);
+    }
 }
