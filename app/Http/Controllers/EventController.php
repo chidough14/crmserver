@@ -133,7 +133,11 @@ class EventController extends Controller
 
         // For planetscale
         $meeting = Meeting::where("event_id", $eventId)->first();
-        $meeting->delete();
+        
+        if($meeting) {
+            $meeting->delete();
+        }
+      
 
         return response([
             'message' => 'Event deleted',
