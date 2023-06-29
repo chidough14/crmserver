@@ -164,6 +164,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/meetings/{meetingId}', [MeetingController::class, 'deleteMeeting']);
     Route::get('/meeting/join/{meetingId}', [MeetingController::class, 'getMeetingDetails']);
     Route::get('/notifications', [MeetingController::class, 'getNotifications']);
+    Route::post('/meetings-bulk-delete', [MeetingController::class, 'bulkDeleteMeeting']);
 
     //Messages
 
