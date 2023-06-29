@@ -127,10 +127,33 @@ class MeetingController extends Controller
     public function deleteMeeting ($meetingId) {
         $meeting = Meeting::where("id", $meetingId)->first();
 
+        $event = Event::where("id", $meeting->event_id)->first();
+
+        $event->delete();
+
         $meeting->delete();
+
+
 
         return response([
             'message' => 'Meeting deleted',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function bulkDeleteMeeting (Request $request) {
+        // Meeting::whereIn('id', $request->meetingIds)->delete();
+
+        foreach ($request->meetingIds as $item) {
+            $rec = Meeting::where("id", $item)->first();
+            $event = Event::where("id", $rec->event_id)->first();
+
+            $rec->delete();
+            $event->delete();
+        }
+
+        return response([
+            'message' => 'Meetings deleted',
             'status' => 'success'
         ], 201);
     }
