@@ -16,6 +16,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FollowerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -210,5 +211,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::patch('/categories/{id}', [CategoryController::class, 'updateCategory']);
     Route::delete('/categories/{id}', [CategoryController::class, 'deleteCategory']);
     Route::post('/categories-bulk-add', [CategoryController::class, 'bulkAddCategory']);
+
+    //Followers
+    Route::post('/follow-user', [FollowerController::class, 'followUser']);
+    Route::post('/unfollow-user', [FollowerController::class, 'unFollowUser']);
+    Route::get('/followers', [FollowerController::class, 'getMyFollowers']);
+    Route::get('/followed', [FollowerController::class, 'getMyFollowed']);
+    Route::get('/followers/{id}', [FollowerController::class, 'getUserFollowers']);
+    Route::get('/followed/{id}', [FollowerController::class, 'getUserFollowed']);
     
 });
