@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('followers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('follower_id')->nullable();
-            $table->foreign('follower_id')->references('id')->on('users')->onDelete('cascade');
+            // $table->foreign('follower_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('followee_id')->nullable();
-            $table->foreign('followee_id')->references('id')->on('users')->onDelete('cascade');
+            // $table->foreign('followee_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
