@@ -80,6 +80,18 @@ class User extends Authenticatable
         return $this->hasMany(StripePayment::class);
     }
 
+     // Define the relationship where a user can have many followers
+     public function followers()
+     {
+         return $this->hasMany(Follower::class, 'followee_id');
+     }
+ 
+     // Define the relationship where a user can be followed by many users
+     public function following()
+     {
+         return $this->hasMany(Follower::class, 'follower_id');
+     }
+
     // public function messages()
     // {
     //     return $this->hasMany(Message::class);
