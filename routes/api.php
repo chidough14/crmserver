@@ -17,6 +17,7 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FollowerController;
+use App\Http\Controllers\OfflineFollowersMessageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -219,5 +220,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/followed', [FollowerController::class, 'getMyFollowed']);
     Route::get('/followers/{id}', [FollowerController::class, 'getUserFollowers']);
     Route::get('/followed/{id}', [FollowerController::class, 'getUserFollowed']);
+
+    Route::post('/add-message-for-offline-followers', [OfflineFollowersMessageController::class, 'addMessage']);
+    Route::get('/followers-offline-activities', [OfflineFollowersMessageController::class, 'getMessages']);
+    Route::delete('/followers-offline-activities/{id}', [OfflineFollowersMessageController::class, 'deleteMessage']);
     
 });
