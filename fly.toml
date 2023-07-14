@@ -1,0 +1,63 @@
+# fly.toml app configuration file generated for crmserver on 2023-07-13T10:34:11+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "crmserver"
+primary_region = "ams"
+console_command = "php /var/www/html/artisan tinker"
+
+[build]
+  [build.args]
+    NODE_VERSION = "18"
+    PHP_VERSION = "8.1"
+
+[env]
+  APP_NAME="Laravel"
+  APP_ENV = "production"
+  APP_DEBUG=true
+  APP_URL = "https://crmserver.fly.dev"
+  LOG_CHANNEL="stack"
+  LOG_DEPRECATIONS_CHANNEL="null"
+  LOG_LEVEL="debug"
+
+  LOG_CHANNEL2 = "stderr"
+  LOG_LEVEL2 = "info"
+  LOG_STDERR_FORMATTER2 = "Monolog\\Formatter\\JsonFormatter"
+
+  SESSION_DRIVER2 = "cookie"
+  SESSION_SECURE_COOKIE2 = "true"
+
+ 
+
+  SESSION_DRIVER="file"
+  SESSION_LIFETIME=120
+
+  DB_CONNECTION="mysql"
+  DB_HOST="aws.connect.psdb.cloud"
+  DB_PORT=3306
+  DB_DATABASE="crmserver"
+  DB_USERNAME="n5hkgtznzjdheeqys4eb"
+  DB_PASSWORD="pscale_pw_RsVzischRuhphSmYRS6PaUixsul7VanapHxqGambFUn"
+  MYSQL_ATTR_SSL_CA="/etc/ssl/certs/ca-certificates.crt"
+  BROADCAST_DRIVER="log"
+  CACHE_DRIVER="file"
+  FILESYSTEM_DISK="local"
+  QUEUE_CONNECTION="sync"
+
+  MAIL_MAILER="smtp"
+  MAIL_HOST="smtp.mailtrap.io"
+  MAIL_PORT=2525
+  MAIL_USERNAME="a6fd851f4e63a0"
+  MAIL_PASSWORD="0202c5f15f994b"
+  MAIL_ENCRYPTION="tls"
+  MAIL_FROM_ADDRESS="cashboys14@example.com"
+  MAIL_FROM_NAME="${APP_NAME}"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
