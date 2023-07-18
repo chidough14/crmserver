@@ -39,4 +39,9 @@ class Activity extends Model
     {
         return $this->hasMany(Invoice::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }
