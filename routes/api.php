@@ -16,6 +16,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\OfflineFollowersMessageController;
 use Illuminate\Http\Request;
@@ -224,5 +225,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/add-message-for-offline-followers', [OfflineFollowersMessageController::class, 'addMessage']);
     Route::get('/followers-offline-activities', [OfflineFollowersMessageController::class, 'getMessages']);
     Route::delete('/followers-offline-activities/{id}', [OfflineFollowersMessageController::class, 'deleteMessage']);
+
+    // Activity comments
+    Route::post('/comment', [CommentController::class, 'addComment']);
+    Route::patch('/comment/{id}', [CommentController::class, 'editComment']);
+    Route::delete('/comment/{id}', [CommentController::class, 'deleteComment']);
+
     
 });

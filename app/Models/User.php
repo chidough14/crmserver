@@ -92,6 +92,11 @@ class User extends Authenticatable
          return $this->hasMany(Follower::class, 'follower_id');
      }
 
+     public function comments()
+     {
+         return $this->hasMany(Comment::class);
+     }
+
     // public function messages()
     // {
     //     return $this->hasMany(Message::class);
