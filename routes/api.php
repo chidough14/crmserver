@@ -231,5 +231,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::patch('/comment/{id}', [CommentController::class, 'editComment']);
     Route::delete('/comment/{id}', [CommentController::class, 'deleteComment']);
 
+    Route::get('/comment/{id}/upvote', [CommentController::class, 'upVote']);
+    Route::get('/comment/{id}/downvote', [CommentController::class, 'downVote']);
+
+    Route::get('/users-upvotes', [CommentController::class, 'getUserUpvotes']);
+    Route::get('/users-downvotes', [CommentController::class, 'getUserDownvotes']);
+
     
 });
