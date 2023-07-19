@@ -13,17 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('votes', function (Blueprint $table) {
             $table->id();
-            $table->string("content");
-            $table->unsignedBigInteger('parent_id')->nullable()->default(null);
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-            $table->unsignedBigInteger('activity_id')->nullable();
-            $table->foreign('activity_id')->references('id')->on('activities')->onDelete('set null');
-            $table->string('isDeleted')->nullable()->default("No");
-            $table->integer('upvotes')->nullable();
-            $table->integer('downvotes')->nullable();
+            $table->unsignedBigInteger('comment_id')->nullable();
+            $table->foreign('comment_id')->references('id')->on('comments')->onDelete('set null');
+            $table->string('vote_type');
             $table->timestamps();
         });
     }
@@ -35,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('votes');
     }
 };

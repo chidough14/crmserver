@@ -10,7 +10,7 @@ class Comment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'content','parent_id', 'activity_id', 'user_id', 'isDeleted'
+        'content','parent_id', 'activity_id', 'user_id', 'isDeleted',  'upvotes',  'downvotes'
     ];
 
     public function user()
@@ -21,5 +21,20 @@ class Comment extends Model
     public function activity()
     {
         return $this->belongsTo(Activity::class);
+    }
+
+    public function votes()
+    {
+        return $this->hasMany(Vote::class);
+    }
+
+    public function upvote()
+    {
+        $this->increment('upvotes');
+    }
+
+    public function downvote()
+    {
+        $this->increment('downvotes');
     }
 }
