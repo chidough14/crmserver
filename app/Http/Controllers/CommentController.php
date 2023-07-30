@@ -3,11 +3,41 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Message;
+use App\Models\User;
 use App\Models\Vote;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
+    private function sendMessage ($mentions) {
+        $allUsers = User::all();
+        $userData = null;
+
+        for ($i=0; $i<count($mentions); $i++) {
+           //    $username = substr($request->mentions[$i], 1);
+           foreach ($allUsers as $person) {
+                if ($person->name === $mentions[$i]) {
+                    $userData = $person;
+                    break; // Stop searching once the target is found
+                }
+            }
+
+            if ($userData !== null) {
+                Message::create([
+                    "message" => "testing",
+                    "subject" => "You were mentioned",
+                    "quill_message" => "You were mentioned by ".auth()->user()->name,
+                    "receiver_id" => $userData->id
+                ]);
+            } else {
+              return "Person not found";
+            }
+   
+        }
+    }
+
+
     public function addComment (Request $request) {
         $request->validate([
             'content'=> 'required',
@@ -20,6 +50,8 @@ class CommentController extends Controller
             'activity_id'=> $request->activity_id,
             'parent_id'=> $request->parent_id,
         ]);
+
+        $this->sendMessage($request->mentions);
 
         return response([
             'comment'=> $comment,
@@ -34,6 +66,8 @@ class CommentController extends Controller
 
         $comment->content = $request->content;
         $comment->save();
+
+        $this->sendMessage($request->mentions);
 
         return response([
             'comment'=> $comment,
