@@ -21,6 +21,7 @@ class MessageController extends Controller
               $res->subject = $request->subject;
               $res->message = $request->message;
               $res->sender_id = $request->sender_id;
+              $res->quill_message = json_encode($request->quill_message);
               $res->receiver_id = $request->receiver_id[$i];
 
               $res->save();
