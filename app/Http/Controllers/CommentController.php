@@ -10,7 +10,14 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    private function sendMessage ($mentions) {
+    private function replaceMentions($inputString) {
+        $pattern = '/@\[(.*?)\]\((.*?)\)/';
+        $replacement = '$1';
+        $outputString = preg_replace($pattern, $replacement, $inputString);
+        return $outputString;
+    }
+
+    private function sendMessage ($mentions,  $content, $activityId) {
         $allUsers = User::all();
         $userData = null;
 
@@ -26,8 +33,8 @@ class CommentController extends Controller
             if ($userData !== null) {
                 Message::create([
                     "message" => "testing",
-                    "subject" => "You were mentioned",
-                    "quill_message" => "You were mentioned by ".auth()->user()->name,
+                    "subject" => "You were mentioned by ".auth()->user()->name,
+                    "quill_message" => $this->replaceMentions($content)."(".$activityId.")",
                     "receiver_id" => $userData->id
                 ]);
             } else {
@@ -51,7 +58,7 @@ class CommentController extends Controller
             'parent_id'=> $request->parent_id,
         ]);
 
-        $this->sendMessage($request->mentions);
+        $this->sendMessage($request->mentions, $request->content, $request->activity_id);
 
         return response([
             'comment'=> $comment,
@@ -67,7 +74,7 @@ class CommentController extends Controller
         $comment->content = $request->content;
         $comment->save();
 
-        $this->sendMessage($request->mentions);
+        $this->sendMessage($request->mentions, $request->content, $request->activity_id);
 
         return response([
             'comment'=> $comment,
