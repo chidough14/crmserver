@@ -34,7 +34,7 @@ class CommentController extends Controller
                 Message::create([
                     "message" => "testing",
                     "subject" => "You were mentioned by ".auth()->user()->name,
-                    "quill_message" => $this->replaceMentions($content)."(".$activityId.")",
+                    "quill_message" => json_encode($content),
                     "receiver_id" => $userData->id
                 ]);
             } else {
@@ -52,13 +52,16 @@ class CommentController extends Controller
         ]);
 
         $comment = Comment::create([
-            'content'=> $request->content,
+            // 'content'=> $request->content,
+            'content'=> json_encode($request->content),
             'user_id'=> auth()->user()->id,
             'activity_id'=> $request->activity_id,
             'parent_id'=> $request->parent_id,
         ]);
 
         $this->sendMessage($request->mentions, $request->content, $request->activity_id);
+
+        $comment->content = json_decode( $comment->content);
 
         return response([
             'comment'=> $comment,
