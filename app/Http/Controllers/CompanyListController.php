@@ -255,7 +255,7 @@ class CompanyListController extends Controller
 
         $res = new Message();
         $res->subject = "List Tranfer";
-        $res->message = "A list $transferedList->name ($transferedList->id) has been transfered to you";
+        $res->message =  "List ID (".$transferedList->id.")";
         $res->receiver_id =  $newOwner->id;
         $res->quill_message =  "A list $transferedList->name ($transferedList->id) has been transfered to you";
 
@@ -318,7 +318,7 @@ class CompanyListController extends Controller
 
             $res = new Message();
             $res->subject = "List Tranfer";
-            $res->message = "A list $transferedList->name ($transferedList->id) has been transfered to you";
+            $res->message =  "List ID (".$transferedList->id.")";
             $res->receiver_id =  $newOwner->id;
             $res->quill_message =  "A list $transferedList->name ($transferedList->id) has been transfered to you";
 

@@ -124,6 +124,11 @@ class MessageController extends Controller
     public function getSingleMessage ($messageId) {
         $message = Message::where("id", $messageId)->first();
 
+        if ($message->sender_id !== auth()->user()->id && $message->isRead === 0) {
+            $message->isRead = 1;
+            $message->save();
+        }
+
         return response([
             'messageDetails'=> $message,
             'message' => 'Message',
