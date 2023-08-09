@@ -32,7 +32,7 @@ class CommentController extends Controller
 
             if ($userData !== null) {
                 Message::create([
-                    "message" => "testing",
+                    "message" => "Activity ID (".$activityId.")",
                     "subject" => "You were mentioned by ".auth()->user()->name,
                     "quill_message" => json_encode($content),
                     "receiver_id" => $userData->id
