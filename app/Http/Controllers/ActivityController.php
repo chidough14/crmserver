@@ -418,7 +418,7 @@ class ActivityController extends Controller
 
         $res = new Message();
         $res->subject = "Activity Tranfer";
-        $res->message = "An activity $transferedActivity->label ($transferedActivity->id) has been transfered to you";
+        $res->message =  "Activity ID (".$transferedActivity->id.")";
         $res->receiver_id =  $newOwner->id;
         $res->quill_message = "An activity $transferedActivity->label ($transferedActivity->id) has been transfered to you";
 
@@ -453,7 +453,7 @@ class ActivityController extends Controller
     
             $res = new Message();
             $res->subject = "Activity Tranfer";
-            $res->message = "An activity $transferedActivity->label ($transferedActivity->id) has been transfered to you";
+            $res->message =  "Activity ID (".$transferedActivity->id.")";
             $res->receiver_id =  $newOwner->id;
             $res->quill_message = "An activity $transferedActivity->label ($transferedActivity->id) has been transfered to you";
     
