@@ -68,6 +68,8 @@ class ActivityController extends Controller
                 }
                 $activity['total'] = $total;
             }
+
+            $activity->comments;
           
         }
 
@@ -85,9 +87,7 @@ class ActivityController extends Controller
      
 
         $res = $this->getTotals($activities);
-
-
-
+        
         return response([
             'activities'=> $res,
             'message' => 'All activities',
@@ -144,11 +144,25 @@ class ActivityController extends Controller
 
         $activity = Activity::where("id", $activityId)->first();
 
+        $allUsers = User::all();
+
         $activity->products;
         $activity->events;
         $activity->company;
         $activity->invoices;
         $activity->comments;
+        foreach ($activity->comments as $item) {
+            $newArray = [];
+            foreach ($allUsers as $item2) {
+                if ($item['likersId']) {
+                    if (in_array($item2['id'], $item['likersId'])) {
+                        $newArray[] = $item2;
+                    }
+                }
+              
+            }
+            $item->likers = $newArray;
+        }
 
         return response([
             'activity'=> $activity,
