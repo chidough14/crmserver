@@ -57,6 +57,7 @@ class CommentController extends Controller
             'user_id'=> auth()->user()->id,
             'activity_id'=> $request->activity_id,
             'parent_id'=> $request->parent_id,
+            'upvotes' => 0
         ]);
 
         $this->sendMessage($request->mentions, $request->content, $request->activity_id);
@@ -102,16 +103,34 @@ class CommentController extends Controller
 
     public function upVote ($id) {
         $comment = Comment::findOrFail($id);
+        $allUsers = User::all();
 
         $upvote = Vote::where("user_id", auth()->user()->id)
                 ->where("comment_id", $id)
                 ->where("vote_type", "upvote")
-                ->first();       
+                ->first();  
+     
+        $likers = $comment->likersId ?? [];
 
         if ($upvote) {
             $comment->upvotes =  $comment->upvotes - 1;
+
+            $likers = array_diff($likers, [auth()->user()->id]);
+            $comment->likersId = $likers;
+
             $comment->save();
             $upvote->delete();
+            $comment->content = json_decode( $comment->content);
+            
+            $newArray = [];
+            foreach ($allUsers as $item2) {
+               
+                if (in_array($item2['id'], $comment->likersId)) {
+                    $newArray[] = $item2;
+                }
+              
+            }
+            $comment->likers = $newArray;
 
             return response([
                 'comment'=> $comment,
@@ -122,6 +141,22 @@ class CommentController extends Controller
             $comment->upvote();
           
             $this->storeVote($comment, 'upvote');
+
+            $likers[] = auth()->user()->id;
+            $comment->likersId = $likers;
+            $comment->save();
+
+            $comment->content = json_decode( $comment->content);
+
+            $newArray = [];
+            foreach ($allUsers as $item2) {
+               
+                if (in_array($item2['id'], $comment->likersId)) {
+                    $newArray[] = $item2;
+                }
+              
+            }
+            $comment->likers = $newArray;
 
             return response([
                 'comment'=> $comment,
@@ -144,6 +179,7 @@ class CommentController extends Controller
             $comment->downvotes = $comment->downvotes - 1;
             $comment->save();
             $downvote->delete();
+            $comment->content = json_decode( $comment->content);
 
             return response([
                 'comment'=> $comment,
@@ -154,6 +190,7 @@ class CommentController extends Controller
             $comment->downvote();
        
             $this->storeVote($comment, 'downvote');
+            $comment->content = json_decode( $comment->content);
 
             return response([
                 'comment'=> $comment,
