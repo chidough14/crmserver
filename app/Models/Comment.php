@@ -37,4 +37,16 @@ class Comment extends Model
     {
         $this->increment('downvotes');
     }
+
+    // Mutator to set the likersId attribute as an array
+    public function setLikersIdAttribute($value)
+    {
+        $this->attributes['likersId'] = json_encode($value);
+    }
+
+    // Accessor to retrieve the likersId attribute as an array
+    public function getLikersIdAttribute($value)
+    {
+        return json_decode($value, true);
+    }
 }
