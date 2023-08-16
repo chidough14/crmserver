@@ -97,6 +97,12 @@ class User extends Authenticatable
          return $this->hasMany(Comment::class);
      }
 
+     
+    public function drafts()
+    {
+        return $this->hasMany(Draft::class);
+    }
+
     // public function messages()
     // {
     //     return $this->hasMany(Message::class);
