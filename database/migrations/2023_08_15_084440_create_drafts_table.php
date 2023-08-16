@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('drafts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            // $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->string('subject');
             $table->string('message');
             $table->timestamps();
