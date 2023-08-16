@@ -17,6 +17,7 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DraftController;
 use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\OfflineFollowersMessageController;
 use Illuminate\Http\Request;
@@ -236,6 +237,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/users-upvotes', [CommentController::class, 'getUserUpvotes']);
     Route::get('/users-downvotes', [CommentController::class, 'getUserDownvotes']);
+
+    // Drafts
+    Route::get('/drafts', [DraftController::class, 'getDrafts']);
+    Route::post('/drafts', [DraftController::class, 'addDraft']);
+    Route::get('/drafts/{id}', [DraftController::class, 'getDraft']);
+    Route::patch('/drafts/{id}', [DraftController::class, 'updateDraft']);
+    Route::delete('/drafts/{id}', [DraftController::class, 'deleteDraft']);
 
     
 });
