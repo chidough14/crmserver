@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Activity;
+use App\Models\ActivityMovement;
 use App\Models\Event;
 use App\Models\Invoice;
 use App\Models\Message;
@@ -151,6 +152,7 @@ class ActivityController extends Controller
         $activity->company;
         $activity->invoices;
         $activity->comments;
+        $activity->movements;
         foreach ($activity->comments as $item) {
             $newArray = [];
             foreach ($allUsers as $item2) {
@@ -207,6 +209,11 @@ class ActivityController extends Controller
     public function updateActivity (Request $request, $activityId) {
 
         $activity = Activity::where("id", $activityId)->first();
+
+        ActivityMovement::create([
+            "activity_id" => $activityId,
+            "movement" => $activity->probability."-".$request->probability
+        ]);
 
         if (
             ($activity->probability === "High" && $request->probability === "Medium") ||

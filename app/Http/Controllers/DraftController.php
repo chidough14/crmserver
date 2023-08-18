@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class DraftController extends Controller
 {
     public function getDrafts () {
-        $drafts = Draft::where("user_id", auth()->user()->id)->paginate(5);
+        $drafts = Draft::where("user_id", auth()->user()->id)->latest('created_at')->paginate(5);
 
         return response([
             'drafts'=> $drafts,
@@ -64,6 +64,21 @@ class DraftController extends Controller
 
         return response([
             'message' => 'Draft deleted',
+            'status' => 'success'
+        ], 201);
+    }
+
+    public function bulkDeleteDrafts (Request $request) {
+        $arr = [];
+
+        foreach ($request->messageIds as $item) {
+            $arr[] = $item["id"];
+        }
+
+        Draft::whereIn('id', $arr)->delete();
+
+        return response([
+            'message' => 'Drafts deleted',
             'status' => 'success'
         ], 201);
     }
