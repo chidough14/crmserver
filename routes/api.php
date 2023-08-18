@@ -244,6 +244,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/drafts/{id}', [DraftController::class, 'getDraft']);
     Route::patch('/drafts/{id}', [DraftController::class, 'updateDraft']);
     Route::delete('/drafts/{id}', [DraftController::class, 'deleteDraft']);
+    Route::post('/bulk-delete-drafts', [DraftController::class, 'bulkDeleteDrafts']);
 
     
 });
