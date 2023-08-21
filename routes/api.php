@@ -45,6 +45,7 @@ Route::post('/send-reset-password-email', [PasswordResetController::class, 'send
 Route::post('/reset-password/{token}', [PasswordResetController::class, 'reset']);
 Route::post('/addlogout', [LogoutController::class, 'addlogout']);
 Route::get('/userlogout/{id}', [LogoutController::class, 'userlogout']);
+Route::get('/events-within-hour', [EventController::class, 'getEventsWithinNextHour']);
 
 
 
@@ -133,6 +134,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/events/{eventId}', [EventController::class, 'deleteEvent']);
 
     Route::get('/dashboardevents', [EventController::class, 'dashboardEvents']);
+
 
      //Products
 
