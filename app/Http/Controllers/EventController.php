@@ -17,7 +17,14 @@ class EventController extends Controller
             'end'=> 'required|date|after:start'
         ]);
 
-        $event = Event::create($request->all());
+        $event = Event::create([
+            'title'=> $request->title,
+            'description'=> $request->description,
+            'user_id'=> auth()->user()->id,
+            'activity_id'=> $request->activity_id,
+            'start'=> Carbon::parse($request->start)->format('Y-m-d H:i:s'),
+            'end'=> Carbon::parse($request->end)->format('Y-m-d H:i:s'),
+        ]);
 
         $event->meeting;
 
@@ -106,7 +113,20 @@ class EventController extends Controller
             'end'=> 'date|after:start'
         ]);
 
-        $event->update($request->all());
+        // $event->update($request->all());
+
+        if ($request->has('start')) {
+            $event->start = Carbon::parse($request->start)->format('Y-m-d H:i:s');
+        }
+
+        if ($request->has('end')) {
+            $event->end = Carbon::parse($request->end)->format('Y-m-d H:i:s');
+        }
+
+   
+        $event->fill($request->except(['start', 'end']));
+
+        $event->save();
 
         if($event->meeting !== null) {
             $dateTime = Carbon::parse($event->start);
@@ -135,4 +155,24 @@ class EventController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function getEventsWithinNextHour () {
+        $currentDateTime = date('Y-m-d H:i:s');
+        $oneHourLater = strtotime("+2 hour", strtotime($currentDateTime)); // Add one hour
+
+        $newDateTime = date("Y-m-d H:i:s", $oneHourLater); 
+        
+        $events = Event::whereBetween('start', [$currentDateTime, $newDateTime])
+            ->get();
+    
+        return response([
+            "events" => $events,
+            "now"=> $currentDateTime,
+            "end" => $newDateTime,
+            'message' => 'Events',
+            'status' => 'success'
+        ], 201);
+    }
+    
+    
 }
