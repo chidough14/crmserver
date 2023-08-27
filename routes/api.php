@@ -21,6 +21,7 @@ use App\Http\Controllers\DraftController;
 use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\OfflineFollowersMessageController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,6 +47,24 @@ Route::post('/reset-password/{token}', [PasswordResetController::class, 'reset']
 Route::post('/addlogout', [LogoutController::class, 'addlogout']);
 Route::get('/userlogout/{id}', [LogoutController::class, 'userlogout']);
 Route::get('/events-within-hour', [EventController::class, 'getEventsWithinNextHour']);
+
+Route::get('files/{filename}', function ($filename) {
+    try {
+        $path = storage_path('app/public/files/' . $filename);
+        if (file_exists($path)) {
+            return response()->file($path);
+        } else {
+            return response('File not found', 404);
+        }
+    } catch (Exception $e) {
+        // Log the exception for debugging
+        Log::error($e->getMessage());
+        return response('Internal Server Error', 500);
+    }
+});
+
+Route::get('/download-file/{filename}', [CommentController::class, 'download']);
+
 
 
 
@@ -239,6 +258,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/users-upvotes', [CommentController::class, 'getUserUpvotes']);
     Route::get('/users-downvotes', [CommentController::class, 'getUserDownvotes']);
+    Route::post('/upload-files',  [CommentController::class, 'uploadFiles']);
 
     // Drafts
     Route::get('/drafts', [DraftController::class, 'getDrafts']);

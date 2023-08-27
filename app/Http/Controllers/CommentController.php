@@ -57,12 +57,14 @@ class CommentController extends Controller
             'user_id'=> auth()->user()->id,
             'activity_id'=> $request->activity_id,
             'parent_id'=> $request->parent_id,
-            'upvotes' => 0
+            'upvotes' => 0,
+            'files' => json_encode($request->paths)
         ]);
 
         $this->sendMessage($request->mentions, $request->content, $request->activity_id);
 
         $comment->content = json_decode( $comment->content);
+        $comment->files = json_decode( $comment->files);
 
         return response([
             'comment'=> $comment,
@@ -76,10 +78,13 @@ class CommentController extends Controller
         $comment = Comment::where("id", $id)->first();
 
         $comment->content = $request->content;
+        $comment->files = json_encode($request->paths);
         $comment->save();
 
         $this->sendMessage($request->mentions, $request->content, $request->activity_id);
 
+        $comment->files = json_decode( $comment->files);
+        
         return response([
             'comment'=> $comment,
             'message' => 'Comment updated successfully',
@@ -230,5 +235,19 @@ class CommentController extends Controller
             'message' => 'Upvotes',
             'status' => 'success'
         ], 201);
+    }
+
+    public function uploadFiles(Request $request)
+    {
+        $file = $request->file('file');
+        $originalName = $file->getClientOriginalName();
+        $filePath = $file->storeAs('files', $originalName, 'public'); 
+        return response()->json(['filePath' => $filePath]);
+    }
+
+    public function download($filename)
+    {
+        $filePath = storage_path('app/public/files/' . $filename);
+        return response()->download($filePath);
     }
 }
