@@ -153,6 +153,7 @@ class ActivityController extends Controller
         $activity->invoices;
         $activity->comments;
         $activity->movements;
+
         foreach ($activity->comments as $item) {
             $newArray = [];
             foreach ($allUsers as $item2) {
@@ -164,6 +165,8 @@ class ActivityController extends Controller
               
             }
             $item->likers = $newArray;
+
+            $item->files = json_decode($item->files, true);
         }
 
         return response([
