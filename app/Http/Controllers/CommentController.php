@@ -136,6 +136,7 @@ class CommentController extends Controller
               
             }
             $comment->likers = $newArray;
+            $comment->files = json_decode( $comment->files);
 
             return response([
                 'comment'=> $comment,
@@ -162,6 +163,7 @@ class CommentController extends Controller
               
             }
             $comment->likers = $newArray;
+            $comment->files = json_decode( $comment->files);
 
             return response([
                 'comment'=> $comment,
@@ -185,6 +187,7 @@ class CommentController extends Controller
             $comment->save();
             $downvote->delete();
             $comment->content = json_decode( $comment->content);
+            $comment->files = json_decode( $comment->files);
 
             return response([
                 'comment'=> $comment,
@@ -196,6 +199,7 @@ class CommentController extends Controller
        
             $this->storeVote($comment, 'downvote');
             $comment->content = json_decode( $comment->content);
+            $comment->files = json_decode( $comment->files);
 
             return response([
                 'comment'=> $comment,
