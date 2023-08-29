@@ -22,7 +22,16 @@ class ActivityController extends Controller
             'probability'=> 'required'
         ]);
 
-        $activity = Activity::create($request->all());
+        $requestObject = $request->all();
+
+        if (isset($requestObject['files'])) {
+            $files = $requestObject['files'];
+            $requestObject['files'] = json_encode($files);
+        }
+
+        $activity = Activity::create($requestObject);
+
+        $activity->files = json_decode($activity->files);
 
         $event = Event::create([
             "title" => "{$request->type} with {$request->label}",
@@ -70,7 +79,9 @@ class ActivityController extends Controller
                 $activity['total'] = $total;
             }
 
+            $activity->files = json_decode($activity->files);
             $activity->comments;
+           
           
         }
 
@@ -85,7 +96,8 @@ class ActivityController extends Controller
     public function getActivities () {
 
         $activities = Activity::with('products')->where("user_id", auth()->user()->id)->get();
-     
+        
+        
 
         $res = $this->getTotals($activities);
         
@@ -169,6 +181,8 @@ class ActivityController extends Controller
             $item->files = json_decode($item->files, true);
         }
 
+        $activity->files = json_decode($activity->files);
+
         return response([
             'activity'=> $activity,
             'message' => 'Activity',
@@ -213,10 +227,26 @@ class ActivityController extends Controller
 
         $activity = Activity::where("id", $activityId)->first();
 
-        ActivityMovement::create([
-            "activity_id" => $activityId,
-            "movement" => $activity->probability."-".$request->probability
-        ]);
+
+        if ($request->probability !== $activity->probability) {
+             ActivityMovement::create([
+                "activity_id" => $activityId,
+                "movement" => $activity->probability."-".$request->probability
+            ]);
+        }
+
+        
+        $requestObject = $request->all();
+
+        if (isset($requestObject['files'])) {
+            $files = $requestObject['files'];
+            $requestObject['files'] = json_encode($files);
+        }
+
+        // $activity = Activity::create($requestObject);
+        $activity->update($requestObject);
+
+        $activity->files = json_decode($activity->files);
 
         if (
             ($activity->probability === "High" && $request->probability === "Medium") ||
@@ -242,7 +272,7 @@ class ActivityController extends Controller
             $activity->save();
         }
         
-        $activity->update($request->all());
+        // $activity->update($request->all());
 
         return response([
             'activity'=> $activity,
@@ -715,4 +745,29 @@ class ActivityController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function uploadFile(Request $request, $id)
+    {
+        $activity = Activity::where("id", $id)->first();
+
+        $file = $request->file('file');
+        $originalName = $file->getClientOriginalName();
+        $filePath = $file->storeAs('files', $originalName, 'public');
+            
+        $activityFiles = json_decode($activity->files, true); // Decode the JSON into an array
+
+        if (!is_array($activityFiles)) {
+            $activityFiles = [];
+        }
+
+        $activityFiles[] = $filePath; // Push the new value
+
+        $activity->files = json_encode($activityFiles); // Encode the array back to JSON
+        $activity->save(); // Save the updated model
+
+        $activity->files = json_decode($activity->files);
+
+        return response()->json(['filePath' => $filePath, 'activity' => $activity]);
+    }
+
 }

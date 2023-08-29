@@ -144,6 +144,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/activities-force-delete/{id}', [ActivityController::class, 'forceDeleteActivity']);
     Route::post('/activities-bulk-force-delete', [ActivityController::class, 'bulkForceDeleteActivities']);
 
+    Route::post('/upload-files-and-save/{id}', [ActivityController::class, 'uploadFile']);
+
     //Events
 
     Route::post('/events', [EventController::class, 'createEvent']);
