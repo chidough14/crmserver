@@ -16,15 +16,27 @@ class MessageController extends Controller
     public function createMessage (Request $request) {
         if (is_array($request->receiver_id)) {
             $messageArray = array();
+
+            $requestObject = $request->all();
+
+            if (isset($requestObject['files'])) {
+                $files = $requestObject['files'];
+                $requestObject['files'] = json_encode($files);
+            }
+            $requestObject['quill_message'] = json_encode($requestObject['quill_message']);
+
+
             for ($i=0; $i < count($request->receiver_id); $i++) {
               $res = new Message();
-              $res->subject = $request->subject;
-              $res->message = $request->message;
-              $res->sender_id = $request->sender_id;
-              $res->quill_message = json_encode($request->quill_message);
+              $res->subject = $requestObject['subject'];
+              $res->message =  $requestObject['message'];
+              $res->sender_id =  $requestObject['sender_id'];
+              $res->quill_message = $requestObject['quill_message'];
               $res->receiver_id = $request->receiver_id[$i];
+              $res->files =  $requestObject['files'];
 
               $res->save();
+              
 
               array_push($messageArray, $res);
 
@@ -44,18 +56,22 @@ class MessageController extends Controller
             ], 201);
 
         } else {
+
             $request->validate([
                 'subject'=> 'required',
                 'message'=> 'required'
             ]);
 
-            $resp = Message::create([
-                "message" => $request->message,
-                "subject" => $request->subject,
-                "quill_message" => json_encode($request->quill_message),
-                "receiver_id" => $request->receiver_id,
-                "sender_id" => $request->sender_id
-            ]);
+            $requestObject = $request->all();
+
+            if (isset($requestObject['files'])) {
+                $files = $requestObject['files'];
+                $requestObject['files'] = json_encode($files);
+            }
+
+            $requestObject['quill_message'] = json_encode($requestObject['quill_message']);
+
+            $resp = Message::create($requestObject);
 
             $user = User::where("id", $request->receiver_id)->first();
             $email = $user->email;
@@ -82,6 +98,7 @@ class MessageController extends Controller
         $inBoxMessages = Message::where("receiver_id", auth()->user()->id)->orderBy('created_at', 'DESC')->paginate(5);
 
         foreach ($inBoxMessages as $record) {
+            $record->files = json_decode($record->files);
             // $record->quill_message = json_decode($record->quill_message);
             if ($record->created_at >= $lastFetchTimestamp) {
                 // This is a newly added record
@@ -109,9 +126,11 @@ class MessageController extends Controller
     public function getOutboxMessages () {
         $outBoxMessages = Message::where("sender_id", auth()->user()->id)->orderBy('created_at', 'DESC')->paginate(5);
 
-        // foreach ($outBoxMessages as $record) {
-        //     $record->quill_message = json_decode($record->quill_message);
-        // }
+        foreach ($outBoxMessages as $record) {
+            $record->quill_message = json_decode($record->quill_message);
+            $record->files = json_decode($record->files);
+        }
+     
 
         return response([
             'outbox' => $outBoxMessages,
@@ -128,6 +147,8 @@ class MessageController extends Controller
             $message->isRead = 1;
             $message->save();
         }
+
+        $message->files = json_decode($message->files);
 
         return response([
             'messageDetails'=> $message,
