@@ -10,6 +10,10 @@ class DraftController extends Controller
     public function getDrafts () {
         $drafts = Draft::where("user_id", auth()->user()->id)->latest('created_at')->paginate(5);
 
+        foreach ($drafts as $item) {
+            $item['files'] = json_decode($item['files'] );
+        }
+
         return response([
             'drafts'=> $drafts,
             'message' => 'All Drafts',
@@ -21,18 +25,21 @@ class DraftController extends Controller
         $draft = Draft::create([
             'user_id'=> auth()->user()->id,
             'message' => json_encode($request->message),
-            'subject' => $request->subject
+            'subject' => $request->subject,
+            'files' => json_encode($request->paths)
         ]);
 
         return response([
             'draft'=> $draft,
-            'message' => 'Draft created',
+            'message' => "Draft created",
             'status' => 'success'
         ], 201);
     }
 
     public function getDraft ($id) {
         $draft = Draft::where("id", $id)->first();
+
+        $draft->files = json_decode($draft->files);
 
         return response([
             'draft'=> $draft,
@@ -46,9 +53,11 @@ class DraftController extends Controller
 
         $draft->subject = $request->subject;
         $draft->message = json_encode($request->message);
+        $draft->files =  json_encode($request->paths);
         $draft->save();
 
         // $draft->update($request->all());
+        $draft->files =  json_decode($draft->files);
 
         return response([
             'draft'=> $draft,

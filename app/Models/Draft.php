@@ -10,7 +10,7 @@ class Draft extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'subject','message'
+        'user_id', 'subject','message', 'files'
     ];
 
     public function user()
