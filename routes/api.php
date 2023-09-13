@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\AdminchatController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyListController;
 use App\Http\Controllers\EventController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DraftController;
 use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\OfflineFollowersMessageController;
@@ -270,5 +272,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/drafts/{id}', [DraftController::class, 'deleteDraft']);
     Route::post('/bulk-delete-drafts', [DraftController::class, 'bulkDeleteDrafts']);
 
+    //Conversations
+    Route::post('/conversations', [ConversationController::class, 'addConversation']);
+    Route::get('/conversations', [ConversationController::class, 'fetchConversations']);
+
+    //admin chats
+    Route::get('/adminchats/{id}', [AdminchatController::class, 'getChats']);
+    Route::post('/adminchats', [AdminchatController::class, 'addChats']);
     
 });
