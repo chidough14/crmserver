@@ -21,7 +21,7 @@ class ConversationController extends Controller
     }
 
     public function fetchConversations () {
-        $conversations = Conversation::where("user_id", auth()->user()->id)->get();
+        $conversations = Conversation::where("user_id", auth()->user()->id)->latest('created_at')->get();
 
         return response([
             'conversations'=> $conversations,
