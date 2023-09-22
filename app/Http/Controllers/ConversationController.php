@@ -10,7 +10,8 @@ class ConversationController extends Controller
     public function addConversation (Request $request) {
         $conversation = Conversation::create([
             'conversation_string'=> $request->conversation_string,
-            'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id,
+            'recipient_id' => $request->recipient_id 
         ]);
 
         return response([
@@ -20,8 +21,21 @@ class ConversationController extends Controller
         ], 201);
     }
 
-    public function fetchConversations () {
-        $conversations = Conversation::where("user_id", auth()->user()->id)->latest('created_at')->get();
+    public function fetchConversations ($mode) {
+        $loggedInUserId = auth()->user()->id;
+
+        if ($mode === "users") {
+            $conversations = Conversation::where(function ($query) use ($loggedInUserId) {
+                $query->where('user_id', $loggedInUserId);
+                    //   ->orWhere('recipient_id', $loggedInUserId);
+            })
+            ->whereNotNull('recipient_id')
+            ->latest('created_at')
+            ->paginate(5);
+        } else {
+            $conversations = Conversation::where("user_id", $loggedInUserId)->whereNull('recipient_id')->latest('created_at')->get();
+        }
+       
 
         return response([
             'conversations'=> $conversations,

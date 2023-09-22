@@ -113,6 +113,11 @@ class User extends Authenticatable
         return $this->hasMany(Adminchat::class);
     }
 
+    public function userschats()
+    {
+        return $this->hasMany(Userschat::class);
+    }
+
     // public function messages()
     // {
     //     return $this->hasMany(Message::class);
