@@ -22,6 +22,7 @@ use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DraftController;
 use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\OfflineFollowersMessageController;
+use App\Http\Controllers\UserschatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -274,10 +275,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //Conversations
     Route::post('/conversations', [ConversationController::class, 'addConversation']);
-    Route::get('/conversations', [ConversationController::class, 'fetchConversations']);
+    Route::get('/conversations/{mode}', [ConversationController::class, 'fetchConversations']);
 
     //admin chats
     Route::get('/adminchats/{id}', [AdminchatController::class, 'getChats']);
     Route::post('/adminchats', [AdminchatController::class, 'addChats']);
+
+    // User to user chats
+    Route::get('/users-chats/{id}', [UserschatController::class, 'getChats']);
+    Route::post('/users-chats', [UserschatController::class, 'addChats']);
     
 });
