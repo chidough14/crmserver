@@ -276,6 +276,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //Conversations
     Route::post('/conversations', [ConversationController::class, 'addConversation']);
     Route::get('/conversations/{mode}', [ConversationController::class, 'fetchConversations']);
+    Route::delete('/conversations/{id}', [ConversationController::class, 'deleteConversation']);
+    Route::post('/bulk-delete-conversations', [ConversationController::class, 'bulkDeleteConversations']);
 
     //admin chats
     Route::get('/adminchats/{id}', [AdminchatController::class, 'getChats']);
