@@ -43,4 +43,32 @@ class ConversationController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function deleteConversation ($id) {
+        $conversation = Conversation::where("id", $id)->first();
+
+        if ($conversation->user_id === auth()->user()->id) {
+            $conversation->delete();
+        
+
+            return response([
+                'message' => 'Conversation deleted',
+                'status' => 'success'
+            ], 201);
+        } else {
+            return response([
+                'message' => 'You are not authorized to delete this item',
+                'status' => 'Unauthorized'
+            ], 401);
+        }
+    }
+
+    public function bulkDeleteConversations (Request $request) {
+        Conversation::whereIn('id', $request->messageIds)->delete();
+
+        return response([
+            'message' => 'Conversations deleted',
+            'status' => 'success'
+        ], 201);
+    }
 }
