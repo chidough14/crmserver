@@ -282,9 +282,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //admin chats
     Route::get('/adminchats/{id}', [AdminchatController::class, 'getChats']);
     Route::post('/adminchats', [AdminchatController::class, 'addChats']);
+    Route::post('/upload-adminchatfiles-and-save', [AdminchatController::class, 'uploadFile']);
 
     // User to user chats
     Route::get('/users-chats/{id}', [UserschatController::class, 'getChats']);
     Route::post('/users-chats', [UserschatController::class, 'addChats']);
+
+    Route::post('/upload-chatfiles-and-save', [UserschatController::class, 'uploadFile']);
     
 });
