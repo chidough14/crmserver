@@ -10,7 +10,7 @@ class Adminchat extends Model
     use HasFactory;
 
     protected $fillable = [
-        'message', 'user_id', 'conversation_id'
+        'message', 'user_id', 'conversation_id', 'files'
     ];
 
     public function user()

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Userschat;
 use Illuminate\Http\Request;
 
@@ -22,7 +21,7 @@ class UserschatController extends Controller
             "message"=> $request->message,
             "user_id"=> $request->user_id,
             "recipient_id"=> $request->recipient_id,
-            "conversation_id"=> $request->conversation_id
+            "conversation_id"=> $request->conversation_id,
         ]);
 
         return response([
@@ -30,5 +29,24 @@ class UserschatController extends Controller
             'message' => 'Chat created',
             'status' => 'success'
         ], 201);
+    }
+
+    public function uploadFile(Request $request)
+    {
+
+        $file = $request->file('file');
+        $originalName = $file->getClientOriginalName();
+        $filePath = $file->storeAs('files', $originalName, 'public');
+
+        $chat = Userschat::create([
+            "message"=> $request->message,
+            "user_id"=> $request->user_id,
+            "recipient_id"=> $request->recipient_id,
+            "conversation_id"=> $request->conversation_id,
+            "files" => $filePath
+        ]);
+
+        return response()->json(['filePath' => $filePath, 'chat' => $chat]);
+  
     }
 }
