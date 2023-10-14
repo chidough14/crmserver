@@ -30,4 +30,22 @@ class AdminchatController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    public function uploadFile(Request $request)
+    {
+
+        $file = $request->file('file');
+        $originalName = $file->getClientOriginalName();
+        $filePath = $file->storeAs('files', $originalName, 'public');
+
+        $adminchat = Adminchat::create([
+            "message"=> $request->message,
+            "user_id"=> $request->user_id,
+            "conversation_id"=> $request->conversation_id,
+            "files" => $filePath
+        ]);
+
+        return response()->json(['filePath' => $filePath, 'chat' => $adminchat]);
+  
+    }
 }

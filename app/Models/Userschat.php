@@ -10,7 +10,7 @@ class Userschat extends Model
     use HasFactory;
 
     protected $fillable = [
-        'message', 'user_id', 'recipient_id', 'conversation_id'
+        'message', 'user_id', 'recipient_id', 'conversation_id', 'files'
     ];
 
     public function user()
