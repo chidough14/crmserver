@@ -41,6 +41,7 @@ class UserController extends Controller
             'dashboard_mode'=> "show_graphs",
             'product_sales_mode'=> "allusers",
             'top_sales_mode'=> "salespersons",
+            'currency_mode'=> "USD",
             'announcements_mode'=> "show"
         ]);
 
