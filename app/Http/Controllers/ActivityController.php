@@ -223,19 +223,37 @@ class ActivityController extends Controller
         ], 201);
     }
 
-    public function updateActivity (Request $request, $activityId) {
-
+    public function updateActivity(Request $request, $activityId)
+    {
         $activity = Activity::where("id", $activityId)->first();
 
-
         if ($request->probability !== $activity->probability) {
-             ActivityMovement::create([
+            ActivityMovement::create([
                 "activity_id" => $activityId,
-                "movement" => $activity->probability."-".$request->probability
+                "movement" => $activity->probability . "-" . $request->probability
             ]);
         }
 
-        
+        $decreased_probability = null;
+        if (
+            ($activity->probability === "High" && $request->probability === "Medium") ||
+            ($activity->probability === "Medium" && $request->probability === "Low") ||
+            ($activity->probability === "High" && $request->probability === "Low")
+        ) {
+            $decreased_probability = true;
+        } elseif (
+            ($activity->probability === "Medium" && $request->probability === "High") ||
+            ($activity->probability === "Low" && $request->probability === "Medium") ||
+            ($activity->probability === "Low" && $request->probability === "High")
+        ) {
+            $decreased_probability = false;
+        } 
+
+        $activity->decreased_probability = $decreased_probability;
+        $activity->save();
+
+
+
         $requestObject = $request->all();
 
         if (isset($requestObject['files'])) {
@@ -243,43 +261,19 @@ class ActivityController extends Controller
             $requestObject['files'] = json_encode($files);
         }
 
-        // $activity = Activity::create($requestObject);
+        // Update the activity with the request data
         $activity->update($requestObject);
 
         $activity->files = json_decode($activity->files);
-
-        if (
-            ($activity->probability === "High" && $request->probability === "Medium") ||
-            ($activity->probability === "Medium" && $request->probability === "Low") ||
-            ($activity->probability === "High" && $request->probability === "Low")
-        
-        ) {
-            $activity->decreased_probability = true;
-            $activity->save();
-        } else if (
-            ($activity->probability === "Medium" && $request->probability === "High") ||
-            ($activity->probability === "Low" && $request->probability === "Medium") ||
-            ($activity->probability === "Low" && $request->probability === "High") 
-        ) {
-            $activity->decreased_probability = false;
-            $activity->save();
-        } else if (
-            ($activity->probability === "Medium" && $request->probability === "Closed") ||
-            ($activity->probability === "Low" && $request->probability === "Closed") ||
-            ($activity->probability === "High" && $request->probability === "Closed") 
-        ) {
-            $activity->decreased_probability = null;
-            $activity->save();
-        }
-        
-        // $activity->update($request->all());
+        $activity->comments;
 
         return response([
-            'activity'=> $activity,
+            'activity' => $activity,
             'message' => 'Activity updated',
             'status' => 'success'
         ], 201);
     }
+
 
 
     public function deleteActivity ($activityId) {
