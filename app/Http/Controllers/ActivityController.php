@@ -267,6 +267,10 @@ class ActivityController extends Controller
         $activity->files = json_decode($activity->files);
         $activity->comments;
 
+        foreach ($activity->comments as $item) {
+            $item->files = json_decode($item->files);
+        }
+
         return response([
             'activity' => $activity,
             'message' => 'Activity updated',
@@ -326,6 +330,7 @@ class ActivityController extends Controller
 
     function createClone ($activity, $ownActivity, $transfer) {
         $activity->products;
+        $activity->files = json_decode($activity->files);
 
         $arr = array();
         $arrQty = array();
@@ -350,6 +355,8 @@ class ActivityController extends Controller
         unset($clonedActivity->id);
 
         $newActivity = new Activity();
+        $newActivity->comments;
+
         if ($transfer) {
             $newActivity->user_id = $transfer->id; 
         } else {
@@ -363,9 +370,12 @@ class ActivityController extends Controller
         $newActivity->probability = $clonedActivity->probability; 
         $newActivity->earningEstimate = $clonedActivity->earningEstimate; 
         $newActivity->company_id = $clonedActivity->company_id; 
-        $newActivity->status = $clonedActivity->status;  
+        $newActivity->status = $clonedActivity->status; 
+        $newActivity->files = json_encode($clonedActivity->files); 
+
         $newActivity->save();
 
+        $newActivity->comments()->saveMany([]);
         $newActivity->products()->attach($sync_data);
        
         for ($c=0; $c < count($activity->invoices); $c++) { 
@@ -408,6 +418,7 @@ class ActivityController extends Controller
 
         }
         
+        $newActivity->files = json_decode($newActivity->files); 
 
         return $newActivity;
     }
