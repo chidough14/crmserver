@@ -146,7 +146,7 @@ class EventController extends Controller
             return response([
                 'message' => 'Not Allowed',
                 'status' => 'error'
-            ], 401);
+            ], 201);
         }
 
         // $event->update($request->all());
@@ -158,7 +158,7 @@ class EventController extends Controller
 
         $event = Event::where("id", $eventId)->first();
 
-        if ($event->id === auth()->user()->id) {
+        if ($event->user_id === auth()->user()->id) {
             $event->delete();
 
             return response([
@@ -170,7 +170,7 @@ class EventController extends Controller
             return response([
                 'message' => 'Not Allowed',
                 'status' => 'error'
-            ], 401);
+            ], 201);
         }
 
       
