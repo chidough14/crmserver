@@ -42,7 +42,9 @@ class UserController extends Controller
             'product_sales_mode'=> "allusers",
             'top_sales_mode'=> "salespersons",
             'currency_mode'=> "USD",
-            'announcements_mode'=> "show"
+            'announcements_mode'=> "show",
+            'show_weather_widget'=> "show",
+            'temperature_mode'=> "celcius"
         ]);
 
         Profile::create([
