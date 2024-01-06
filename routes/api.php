@@ -21,6 +21,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\DraftController;
 use App\Http\Controllers\FollowerController;
+use App\Http\Controllers\LabelController;
 use App\Http\Controllers\OfflineFollowersMessageController;
 use App\Http\Controllers\UserschatController;
 use Illuminate\Http\Request;
@@ -289,5 +290,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/users-chats', [UserschatController::class, 'addChats']);
 
     Route::post('/upload-chatfiles-and-save', [UserschatController::class, 'uploadFile']);
+
+    //labels
+    Route::get('/labels', [LabelController::class, 'getLabels']);
+    Route::post('/labels', [LabelController::class, 'addLabel']);
+    Route::patch('/labels/{id}', [LabelController::class, 'updateLabel']);
+    Route::delete('/labels/{id}', [LabelController::class, 'deleteLabel']);
+
     
 });
